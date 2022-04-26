@@ -1,4 +1,6 @@
-import PDFU
+from PDFU import PDFU_extract
+
+
 
 def main():
-    print("a")
+    PDFU_extract.clean_fun()
