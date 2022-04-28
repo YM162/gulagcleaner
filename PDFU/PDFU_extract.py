@@ -18,10 +18,10 @@ def deembed(pdf_path):
             return_path: If successful, returns the path of the deembedded file.
             Error: If unsuccessful, returns a description of the error.
     '''
-    
+    print("Trying to Deembed:",pdf_path)
     return_msg={"Success":False,"return_path":"","Error":""}
     try:
-        if pdf_path[:-4]!=".pdf":
+        if pdf_path[-4:]!=".pdf":
             return_msg["Success"]=False
             return_msg["Error"]="File is not a .pdf file."
             return return_msg
