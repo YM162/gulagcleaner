@@ -1,7 +1,7 @@
 # PDFU
 PDF Unembedder: Functional inverse of functions that embbed pdf pages inside other documents. The most prominent example is the embedPages() function of PDF-lib.js</br>
 
-This has the side efect of removing ads and watermarks in many.
+This has the side efect of removing ads and watermarks placed by many websites.
 
 # How to install:</br>
 >pip install pdfu</br>
