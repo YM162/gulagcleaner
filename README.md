@@ -4,7 +4,7 @@ PDF Unembedder: Functional inverse of functions that embbed pdf pages inside oth
 This has the side efect of removing ads and watermarks placed by many websites.
 
 # How to install:</br>
->pip install pdfu</br>
+>pip install pdfu==0.2.1</br>
 
 # Usage</br>
 CLI:</br>
