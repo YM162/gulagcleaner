@@ -5,21 +5,11 @@ from pdfrw.findobjs import wrap_object , find_objects
 from pdfrw.objects import PdfName
 from pikepdf import Pdf
 import re
+from pdfminer.high_level import extract_text
 
-def meta(prepdf):
-    #print(prepdf.pages[0]["/Contents"][0].read_bytes())
-    page = prepdf.pages[0]
-    instructions = pikepdf.parse_content_stream(page)
-    data = pikepdf.unparse_content_stream(instructions)
-    data = data.decode('ascii')
-    pattern="<(.*?)>"
-    
-    metalist = []
-    
-    for substring in re.findall(pattern,data):
-        bytes_object = bytes.fromhex(substring)
-        text = bytes_object.decode("latin-1")
-        metalist.append(text)
+def meta(pdf_path):
+    text = extract_text(pdf_path,maxpages=1)
+    metalist = list(filter(None,text.splitlines()))
     metadict = {
         "Archivo":metalist[0],
         "Autor":metalist[1],
@@ -40,10 +30,11 @@ def deembed(pdf_path):
         pdf_path: The path where the pdf file is located.
         
     Returns:
-        return_msg: Dict. with three values:
+        return_msg: Dict. with four values:
             Success: bool indicating whether the process was successful.
             return_path: If successful, returns the path of the deembedded file.
             Error: If unsuccessful, returns a description of the error.
+	        Meta: Dictionary with information about the file.
     '''
     print("Trying to Deembed:",pdf_path)
     return_msg={"Success":False,"return_path":"","Error":"","Meta":{}}
@@ -56,7 +47,7 @@ def deembed(pdf_path):
         prepdf=Pdf.open(pdf_path)
         
         try:
-            metadict = meta(prepdf)
+            metadict = meta(pdf_path)
             return_msg["Meta"]=metadict
         except:
             print("Meta not extracted. Probably not a W file.")
