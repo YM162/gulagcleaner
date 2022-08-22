@@ -30,12 +30,20 @@ def deembed(pdf_path):
         pdf_path: The path where the pdf file is located.
         
     Returns:
-        return_msg: Dict. with four values:
-            Success: bool indicating whether the process was successful.
-            return_path: If successful, returns the path of the deembedded file.
-            Error: If unsuccessful, returns a description of the error.
-	        Meta: Dictionary with information about the file.
+        return_msg: (Dictionary):
+            Success: (bool) indicating whether the process was successful.
+            return_path: (string) If successful, returns the path of the deembedded file.
+            Error: (string) If unsuccessful, returns a description of the error.
+	        Meta: (dictionary) Information about the file:
+                Archivo (string)
+                Autor (string)
+                Asignatura (string)
+                Curso y Grado (string)
+                Facultad (string)
+                Universidad (string)
+
     '''
+    
     print("Trying to Deembed:",pdf_path)
     return_msg={"Success":False,"return_path":"","Error":"","Meta":{}}
     try:
@@ -50,7 +58,7 @@ def deembed(pdf_path):
             metadict = meta(pdf_path)
             return_msg["Meta"]=metadict
         except:
-            print("Meta not extracted. Probably not a W file.")
+            print("Meta not extracted. Probably not a Wuolah file.")
         
         prepdf.save(pdf_path[:-4]+"_inter.pdf")
         prepdf.close()
@@ -82,6 +90,5 @@ def deembed(pdf_path):
 
 
 if __name__ == "__main__":
-    print('Call from the "pdfu" command.')
-    print(deembed("../tests/testpdf/AnonimoTema9.pdf"))
+    print('Call from the "gulagcleaner" command.')
     
