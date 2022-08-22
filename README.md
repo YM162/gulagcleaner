@@ -1,9 +1,9 @@
 # Gulag-cleaner-cli
 
-Herramienta de eliminación de anuncios en PDFs generados por la plataforma Wuolah.
-Es un inverso funcional de las funciones que insertan páginas pdf dentro de otros documentos. El ejemplo más prominente es la función embedPages() de la librería PDF-lib.js</br>
+Herramienta de eliminación de anuncios para PDFs generados por la plataforma Wuolah.
+Es un inverso funcional de las funciones que insertan páginas pdf dentro de otros documentos en forma de objetos PdfName. El ejemplo más prominente es la función embedPages() de la librería PDF-lib.js</br>
 
-Adicionalmente también es capaz de extraer los Metadatos (Autor, Asignatura, Universidad...) del archivo. Para más información consultar la descripción de la función.</br>
+También es capaz de extraer los Metadatos (Autor, Asignatura, Universidad...) del archivo. Para más información consultar la descripción de la función.</br>
 
 # Como instalar</br>
 >pip install gulagcleaner</br>
