@@ -21,7 +21,7 @@ def meta(pdf_path):
     
     return metadict
     
-def deembed(pdf_path):
+def deembed(pdf_path,replace):
     '''
     Deembeds the pdf and creates a new PDF in the same folder with each embedded page
     in a new page.
@@ -73,8 +73,10 @@ def deembed(pdf_path):
             return_msg["Success"]=False
             return_msg["Error"]="No embedded pages found."
             return return_msg
-
-        output=pdf_path[:-4]+"_deembedded.pdf"
+        if replace:
+            output=pdf_path[:-4]+".pdf"
+        else:
+            output=pdf_path[:-4]+"_deembedded.pdf"
         writer = PdfWriter(output)
         writer.addpages(páginas)
         writer.write()
