@@ -6,6 +6,9 @@ Es un inverso funcional de las funciones que insertan páginas pdf dentro de otr
 También es capaz de extraer los Metadatos (Autor, Asignatura, Universidad...) del archivo. Para más información consultar la descripción de la función.</br>
 
 
+# Instalación</br>
+>pip install gulagcleaner-xv==0.4.3</br>
+
 # Opciones</br>
     *-r : reemplaza los archivos originales
 
