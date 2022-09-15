@@ -22,6 +22,8 @@ def main():
         if '-r' in sys.argv:
             replace = True
             sys.argv.remove('-r')
+        else:
+            replace = False
         del sys.argv[0]
         for arg in sys.argv:
             if exists(arg):

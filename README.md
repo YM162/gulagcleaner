@@ -7,10 +7,10 @@ También es capaz de extraer los Metadatos (Autor, Asignatura, Universidad...) d
 
 
 # Instalación</br>
->pip install gulagcleaner-xv==0.4.3</br>
+>pip install gulagcleaner-xv</br>
 
 # Opciones</br>
-    *-r : reemplaza los archivos originales
+-r : reemplaza los archivos originales
 
 # Uso</br>
 CLI:</br>
