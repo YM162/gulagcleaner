@@ -76,10 +76,12 @@ def deembed(pdf_path,replace):
         if replace:
             output=pdf_path[:-4]+".pdf"
         else:
-            output=pdf_path[:-4]+"_deembedded.pdf"
+            output=pdf_path
         writer = PdfWriter(output)
         writer.addpages(páginas)
         writer.write()
+
+        os.rename(output, output.replace('wuolah-free-', ''))
 
         os.remove(pdf_path[:-4]+"_inter.pdf")
         return_msg["Success"]=True
