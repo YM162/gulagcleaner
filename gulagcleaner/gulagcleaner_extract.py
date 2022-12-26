@@ -81,7 +81,7 @@ def deembed(pdf_path,replace):
         writer.addpages(páginas)
         writer.write()
 
-        os.rename(output, output.replace('wuolah-free-', ''))
+        os.rename(output, output.replace('free-', ''))
 
         os.remove(pdf_path[:-4]+"_inter.pdf")
         return_msg["Success"]=True
