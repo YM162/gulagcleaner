@@ -1,98 +1,103 @@
 import os
 import pikepdf
-from pdfrw import PdfReader, PdfWriter
-from pdfrw.findobjs import wrap_object , find_objects
-from pdfrw.objects import PdfName
-from pikepdf import Pdf
-import re
 from pdfminer.high_level import extract_text
+from pdfrw import PdfReader, PdfWriter
+from pdfrw.findobjs import wrap_object, find_objects
+from pdfrw.objects import PdfName
 
-def meta(pdf_path):
-    text = extract_text(pdf_path,maxpages=1)
-    metalist = list(filter(None,text.splitlines()))
-    metadict = {
-        "Archivo":metalist[0],
-        "Autor":metalist[1],
-        "Asignatura":metalist[2],
-        "Curso y Grado":metalist[3],
-        "Facultad":metalist[4],
-        "Universidad":metalist[5]
-    }
-    
-    return metadict
-    
-def deembed(pdf_path,replace):
-    '''
-    Deembeds the pdf and creates a new PDF in the same folder with each embedded page
-    in a new page.
-    
+def extract_metadata(pdf_path):
+    """
+    Extract metadata from a PDF file, including the author, subject, course and grade, faculty, and university.
+
     Args:
-        pdf_path: The path where the pdf file is located.
-        
-    Returns:
-        return_msg: (Dictionary):
-            Success: (bool) indicating whether the process was successful.
-            return_path: (string) If successful, returns the path of the deembedded file.
-            Error: (string) If unsuccessful, returns a description of the error.
-	        Meta: (dictionary) Information about the file:
-                Archivo (string)
-                Autor (string)
-                Asignatura (string)
-                Curso y Grado (string)
-                Facultad (string)
-                Universidad (string)
+        pdf_path (str): The path to the pdf file.
 
-    '''
-    
-    print("Trying to Deembed:",pdf_path)
-    return_msg={"Success":False,"return_path":"","Error":"","Meta":{}}
+    Returns:
+        metadict (dict): A dictionary with the following keys and values:
+            "Archivo": (str) File name.
+            "Autor": (str) Author of the file.
+            "Asignatura": (str) Subject.
+            "Curso y Grado": (str) Course and degree.
+            "Facultad": (str) Faculty.
+            "Universidad": (str) University.
+    """
+    text = extract_text(pdf_path, maxpages=1)
+    metalist = list(filter(None, text.splitlines()))
+    return {
+        "Archivo": metalist[0],
+        "Autor": metalist[1],
+        "Asignatura": metalist[2],
+        "Curso y Grado": metalist[3],
+        "Facultad": metalist[4],
+        "Universidad": metalist[5]
+    }
+
+def deembed(pdf_path, replace=False):
+    """
+    De-embeds the PDF file and creates a new PDF file in the same folder with each embedded page in a new page.
+
+    Args:
+        pdf_path (str): The path to the PDF file.
+        replace (bool, optional): If set to True, the original file will be replaced by the de-embedded file.
+            Default is False.
+
+    Returns:
+        return_msg (dict): A dictionary with the following keys:
+            success (bool): Indicates whether the de-embedding process was successful.
+            return_path (str): The path to the de-embedded file if successful.
+            error (str): An error description if the process was unsuccessful.
+            meta (dict): Information about the file including "Archivo", "Autor", "Asignatura", "Curso y Grado", "Facultad", and "Universidad".
+    """
+    if not pdf_path.endswith(".pdf"):
+        return {
+            "Success": False,
+            "return_path": "",
+            "Error": "File is not a .pdf file.",
+            "Meta": {}
+        }
+
+    intermediate_pdf_path = pdf_path[:-4] + "_inter.pdf"
     try:
-        if pdf_path[-4:]!=".pdf":
-            return_msg["Success"]=False
-            return_msg["Error"]="File is not a .pdf file."
-            return return_msg
-        
-        prepdf=Pdf.open(pdf_path)
-        
+        with pikepdf.Pdf.open(pdf_path) as pdf:
+            pdf.save(intermediate_pdf_path)
+
+        metadict = {}
         try:
-            metadict = meta(pdf_path)
-            return_msg["Meta"]=metadict
-        except:
-            print("Meta not extracted. Probably not a Wuolah file.")
-        
-        prepdf.save(pdf_path[:-4]+"_inter.pdf")
-        prepdf.close()
-        
-        pdf = PdfReader(pdf_path[:-4]+"_inter.pdf")
-        xobjs=list(find_objects(pdf.pages,valid_subtypes=(PdfName.Form, PdfName.Dummy)))
-        páginas=[]
-        for item in xobjs:
-            páginas.append(wrap_object(item, 1000, 0.5*72))
-        if len(xobjs)==0:
-            os.remove(pdf_path[:-4]+"_inter.pdf")
-            return_msg["Success"]=False
-            return_msg["Error"]="No embedded pages found."
-            return return_msg
-        if replace:
-            output=pdf_path[:-4]+".pdf"
-        else:
-            output=pdf_path[:-4]+"_clean.pdf"
+            metadict = extract_metadata(pdf_path)
+        except Exception as e:
+            print("Failed to extract metadata:", e)
+
+        pdf = PdfReader(intermediate_pdf_path)
+        xobjs = list(find_objects(pdf.pages, valid_subtypes=(PdfName.Form, PdfName.Dummy)))
+        pages = [wrap_object(item, 1000, 0.5 * 72) for item in xobjs]
+
+        if not xobjs:
+            os.remove(intermediate_pdf_path)
+            return {
+                "Success": False,
+                "return_path": "",
+                "Error": "No embedded pages found.",
+                "Meta": metadict
+            }
+
+        output = pdf_path[:-4] + (".pdf" if replace else "_clean.pdf")
         writer = PdfWriter(output)
-        writer.addpages(páginas)
+        writer.addpages(pages)
         writer.write()
 
         os.rename(output, output.replace('free-', ''))
+        os.remove(intermediate_pdf_path)
 
-        os.remove(pdf_path[:-4]+"_inter.pdf")
-        return_msg["Success"]=True
-        return_msg["return_path"]=output
-        return return_msg
+        return {
+            "Success": True,
+            "return_path": output,
+            "Error": "",
+            "Meta": metadict
+        }
     except Exception as e:
-        return_msg["Success"]=False
-        return_msg["Error"]=e
-        return return_msg
-
-
-if __name__ == "__main__":
-    print('Call from the "gulagcleaner" command.')
-    
+        return {
+            "Success": False,
+            "return_path": "",
+            "Error": str(e),
+            "Meta": {}
+        }
