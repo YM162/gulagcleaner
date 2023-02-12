@@ -17,7 +17,7 @@ def main():
         print("-v : shows version of the program")
     else:
         if '-v' in sys.argv:
-            print("actual version: 0.4.6")
+            print("actual version: 0.4.7")
         else:
             
             if len(sys.argv)>1:
