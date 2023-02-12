@@ -76,7 +76,7 @@ def deembed(pdf_path,replace):
         if replace:
             output=pdf_path[:-4]+".pdf"
         else:
-            output=pdf_path
+            output=pdf_path[:-4]+"_clean.pdf"
         writer = PdfWriter(output)
         writer.addpages(páginas)
         writer.write()
