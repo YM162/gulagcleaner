@@ -32,7 +32,7 @@ def main():
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("actual version: 0.4.7")
+        print("actual version: 0.4.8")
         return
 
     # Get the filename argument
@@ -64,6 +64,6 @@ def main():
         print("Error:", return_msg["Error"])
 
 
-        
+
 if __name__ == "__main__":
     print('Call from the "gulagcleaner" command.')
