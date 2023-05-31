@@ -10,34 +10,37 @@ def main():
     Available CLI arguments:
     -h : displays help information
     -r : replaces the original file with the deembedded file
+    -o : uses the old deembeding method (for files older than 18/05/2023)
     -v : displays the version of the program
+
     '''
     import sys
     import os.path
 
     # Check for the -h argument
     if '-h' in sys.argv:
-        print("Usage: gulagcleaner [-h] [-r] [-v] <filename>")
+        print("Usage: gulagcleaner [-h] [-r] [-o] [-v] <filename>")
         print("")
-        print("Deembeds pages from a PDF file")
+        print("Deembeds pages from a PDF file.")
         print("")
         print("Positional arguments:")
-        print("  filename      the PDF file to deembed pages from")
+        print("  filename      the PDF file to deembed pages from.")
         print("")
         print("Optional arguments:")
-        print("  -h            show this help message and exit")
-        print("  -r            replaces the original file with the deembedded file")
-        print("  -v            shows the version of the program")
+        print("  -h            show this help message and exit.")
+        print("  -r            replaces the original file with the deembedded file.")
+        print("  -o            uses the old deembeding method (for files older than 18/05/2023).")
+        print("  -v            shows the version of the program.")
         return
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("actual version: 0.4.8")
+        print("actual version: 0.5.1")
         return
 
     # Get the filename argument
     if len(sys.argv) < 2:
-        print('Usage: gulagcleaner [-h] [-r] [-v] <filename>')
+        print('Usage: gulagcleaner [-h] [-r] [-o] [-v] <filename>')
         return
     filename = sys.argv[-1]
 
@@ -49,8 +52,14 @@ def main():
     # Check if the -r argument is present
     replace = '-r' in sys.argv
 
+     # Check if the -o argument is present
+    if '-o' in sys.argv:
+        method = "old"
+    else:
+        method = "new"
+    
     # Call the deembed function
-    return_msg = gulagcleaner_extract.deembed(filename, replace)
+    return_msg = gulagcleaner_extract.deembed(filename, replace,method)
     if return_msg["Success"]:
         print("Deembedding successful. File saved in", return_msg["return_path"])
         print("Metadata:")
