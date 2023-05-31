@@ -37,7 +37,7 @@ return_msg = deembed("file.pdf")
 
 ## Options
 
-Gulag Cleaner provides several options for it's usage:
+Gulag Cleaner provides several options for its usage:
 
 > * '-r': Replace the original file with the cleaned version.
 > * '-o': Use the old deembeding method (for files older than 18/05/2023).
