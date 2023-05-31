@@ -27,7 +27,7 @@ def main():
         print("  filename      the PDF file to deembed pages from.")
         print("")
         print("Optional arguments:")
-        print("  -h            show this help message and exit.")
+        print("  -h            show this help message.")
         print("  -r            replaces the original file with the deembedded file.")
         print("  -o            uses the old deembeding method (for files older than 18/05/2023).")
         print("  -v            shows the version of the program.")
@@ -35,7 +35,7 @@ def main():
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("actual version: 0.5.1")
+        print("actual version: 0.5.2")
         return
 
     # Get the filename argument

@@ -124,6 +124,7 @@ def deembed(pdf_path, replace=False, method="new"):
             for i,page in enumerate([page for page in pdf.pages if len(page.Contents)>1]):
                 newpage = page.copy()
                 newpage.Contents = [pdf.indirect_objects[iobj] for iobj in new_contents[i]]
+                newpage.Annots = []
                 newpages.append(newpage)
         else:
             os.remove(intermediate_pdf_path)
