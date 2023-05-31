@@ -1,6 +1,8 @@
 # Gulag Cleaner
 
-Gulag Cleaner is a tool designed to remove advertisements from PDFs, making it easier to read and navigate documents without being disrupted by unwanted ads. It operates as a functional inverse of functions that insert PDF pages into other documents as Form XObjects, and is particularly useful for reversing the effects of the embedPages() function from the pdf-lib.js library.
+Gulag Cleaner is a tool designed to remove advertisements from PDFs, making it easier to read and navigate documents without being disrupted by unwanted ads.
+
+This tool does not just crop the ads out of the PDF, instead, we extract the original file without ads by manipulating the internal structure of the PDF, ensuring maximum quality.
 
 In addition to removing advertisements, Gulag Cleaner is also capable of extracting metadata, such as the author, subject, university, and more, from the file.
 
@@ -20,7 +22,7 @@ Gulag Cleaner can be used through both a Command Line Interface (CLI) and in you
 To use Gulag Cleaner through the CLI, simply run the following command, replacing `<filename>` with the name of your PDF file:
 
 ```
-gulagcleaner <filename> [-r] [-h] [-v]
+gulagcleaner <filename> [-r] [-h] [-o] [-v]
 ```
 
 ### Code
@@ -38,6 +40,7 @@ return_msg = deembed("file.pdf")
 Gulag Cleaner provides several options for it's usage:
 
 > * '-r': Replaces the original file with the cleaned version.
+> * '-o': Uses the old deembeding method (for files older than 18/05/2023).
 > * '-h': Displays the help message, providing information on how to use Gulag Cleaner.
 > * '-v': Displays the current version of Gulag Cleaner.
 

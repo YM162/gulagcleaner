@@ -32,7 +32,26 @@ def extract_metadata(pdf_path):
         "Universidad": metalist[5]
     }
 
-def deembed(pdf_path, replace=False):
+def find_iobj_pairs(first_page, second_page):
+    """
+    Finds the indirect objects that repeat between pages.
+
+    Args:
+        first_page (PDFPage): The first page.
+        second_page (PDFPage): The second page.
+    
+    Returns:
+        return (tuple): (first_page,first_pair_index)
+            first_pair_index (int): index of the first repeating indirect object on the first page.
+    
+    """
+    comunes = tuple(set(first_page).intersection(second_page))
+    if first_page.index(comunes[0]) < first_page.index(comunes[1]):
+        return (first_page,first_page.index(comunes[0]))
+    else:
+        return (first_page,first_page.index(comunes[1]))
+    
+def deembed(pdf_path, replace=False, method="new"):
     """
     De-embeds the PDF file and creates a new PDF file in the same folder with each embedded page in a new page.
 
@@ -40,6 +59,8 @@ def deembed(pdf_path, replace=False):
         pdf_path (str): The path to the PDF file.
         replace (bool, optional): If set to True, the original file will be replaced by the de-embedded file.
             Default is False.
+        method (str, optional): Defines what strategy will be used to deembed the pdf file. Can be "old" or "new".
+            Default if "new".
 
     Returns:
         return_msg (dict): A dictionary with the following keys:
@@ -58,6 +79,8 @@ def deembed(pdf_path, replace=False):
 
     intermediate_pdf_path = pdf_path[:-4] + "_inter.pdf"
     try:
+        # We remove the decryption in the pdf streams 
+        # This is not always necesary, maybe add a check to see if the file is encrypted?
         with pikepdf.Pdf.open(pdf_path) as pdf:
             pdf.save(intermediate_pdf_path)
 
@@ -68,21 +91,52 @@ def deembed(pdf_path, replace=False):
             print("Failed to extract metadata:", e)
 
         pdf = PdfReader(intermediate_pdf_path)
-        xobjs = list(find_objects(pdf.pages, valid_subtypes=(PdfName.Form, PdfName.Dummy)))
-        pages = [wrap_object(item, 1000, 0.5 * 72) for item in xobjs]
 
-        if not xobjs:
+        if method=="old":
+            xobjs = list(find_objects(pdf.pages, valid_subtypes=(PdfName.Form, PdfName.Dummy)))
+            pages = [wrap_object(item, 1000, 0.5 * 72) for item in xobjs]
+
+            if not xobjs:
+                os.remove(intermediate_pdf_path)
+                return {
+                    "Success": False,
+                    "return_path": "",
+                    "Error": "No embedded pages found.",
+                    "Meta": metadict
+                }
+            
+        elif method=="new":
+            content_list = []
+            for page in pdf.pages:
+                content = [content.indirect for content in page.Contents]
+                if len(content)>1:
+                    content_list.append(content)
+
+            new_contents = []
+            for i in range(0,len(content_list)):
+                if i == len(content_list)-1:
+                    pares = find_iobj_pairs(content_list[i], content_list[i-1])
+                else:
+                    pares = find_iobj_pairs(content_list[i], content_list[i + 1])
+                new_contents.append(pares[0][pares[1]-2:pares[1]+6])
+
+            newpages = []
+            for i,page in enumerate([page for page in pdf.pages if len(page.Contents)>1]):
+                newpage = page.copy()
+                newpage.Contents = [pdf.indirect_objects[iobj] for iobj in new_contents[i]]
+                newpages.append(newpage)
+        else:
             os.remove(intermediate_pdf_path)
             return {
                 "Success": False,
                 "return_path": "",
-                "Error": "No embedded pages found.",
+                "Error": "Deembeding method not found.",
                 "Meta": metadict
             }
-
+        
         output = pdf_path[:-4] + (".pdf" if replace else "_clean.pdf")
         writer = PdfWriter(output)
-        writer.addpages(pages)
+        writer.addpages(newpages)
         writer.write()
 
         os.rename(output, output.replace('wuolah-free-', ''))
