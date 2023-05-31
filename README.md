@@ -22,7 +22,7 @@ Gulag Cleaner can be used through both a Command Line Interface (CLI) and in you
 To use Gulag Cleaner through the CLI, simply run the following command, replacing `<filename>` with the name of your PDF file:
 
 ```
-gulagcleaner <filename> [-r] [-h] [-o] [-v]
+gulagcleaner [-r] [-h] [-o] [-v] <filename>
 ```
 
 ### Code
