@@ -94,7 +94,7 @@ def deembed(pdf_path, replace=False, method="new"):
 
         if method=="old":
             xobjs = list(find_objects(pdf.pages, valid_subtypes=(PdfName.Form, PdfName.Dummy)))
-            pages = [wrap_object(item, 1000, 0.5 * 72) for item in xobjs]
+            newpages = [wrap_object(item, 1000, 0.5 * 72) for item in xobjs]
 
             if not xobjs:
                 os.remove(intermediate_pdf_path)

@@ -35,7 +35,7 @@ def main():
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("actual version: 0.5.0")
+        print("actual version: 0.5.1")
         return
 
     # Get the filename argument
