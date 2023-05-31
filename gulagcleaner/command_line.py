@@ -62,13 +62,14 @@ def main():
     return_msg = gulagcleaner_extract.deembed(filename, replace,method)
     if return_msg["Success"]:
         print("Deembedding successful. File saved in", return_msg["return_path"])
-        print("Metadata:")
-        print("Archivo: " + return_msg["Meta"]["Archivo"])
-        print("Autor: " + return_msg["Meta"]["Autor"])
-        print("Asignatura: " + return_msg["Meta"]["Asignatura"])
-        print("Curso y Grado: " + return_msg["Meta"]["Curso y Grado"])
-        print("Facultad: " + return_msg["Meta"]["Facultad"])
-        print("Universidad: " + return_msg["Meta"]["Universidad"])
+        if return_msg["Meta"] != {}:
+            print("Metadata:")
+            print("Archivo: " + return_msg["Meta"]["Archivo"])
+            print("Autor: " + return_msg["Meta"]["Autor"])
+            print("Asignatura: " + return_msg["Meta"]["Asignatura"])
+            print("Curso y Grado: " + return_msg["Meta"]["Curso y Grado"])
+            print("Facultad: " + return_msg["Meta"]["Facultad"])
+            print("Universidad: " + return_msg["Meta"]["Universidad"])
     else:
         print("Error:", return_msg["Error"])
 
