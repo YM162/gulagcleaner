@@ -8,10 +8,10 @@ def main():
     The "gulagcleaner" command takes an argument for the path of a PDF file and tries to deembed the pages inside it. The pages are saved in a new PDF in the same folder.
     
     Available CLI arguments:
-    -h : displays help information
-    -r : replaces the original file with the deembedded file
-    -o : uses the old deembeding method (for files older than 18/05/2023)
-    -v : displays the version of the program
+    -h : Display help information
+    -r : Replace the original file with the deembedded file
+    -o : Use the old deembeding method (for files older than 18/05/2023)
+    -v : Display the version of the program
 
     '''
     import sys
@@ -24,18 +24,18 @@ def main():
         print("Deembeds pages from a PDF file.")
         print("")
         print("Positional arguments:")
-        print("  filename      the PDF file to deembed pages from.")
+        print("  filename      The PDF file to deembed pages from.")
         print("")
         print("Optional arguments:")
-        print("  -h            show this help message.")
-        print("  -r            replaces the original file with the deembedded file.")
-        print("  -o            uses the old deembeding method (for files older than 18/05/2023).")
-        print("  -v            shows the version of the program.")
+        print("  -h            Show this help message.")
+        print("  -r            Replace the original file with the deembedded file.")
+        print("  -o            Use the old deembeding method (for files older than 18/05/2023).")
+        print("  -v            Show the version of the program.")
         return
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("actual version: 0.5.2")
+        print("Actual version: 0.5.2")
         return
 
     # Get the filename argument

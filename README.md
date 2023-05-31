@@ -39,10 +39,10 @@ return_msg = deembed("file.pdf")
 
 Gulag Cleaner provides several options for it's usage:
 
-> * '-r': Replaces the original file with the cleaned version.
-> * '-o': Uses the old deembeding method (for files older than 18/05/2023).
-> * '-h': Displays the help message, providing information on how to use Gulag Cleaner.
-> * '-v': Displays the current version of Gulag Cleaner.
+> * '-r': Replace the original file with the cleaned version.
+> * '-o': Use the old deembeding method (for files older than 18/05/2023).
+> * '-h': Display the help message, providing information on how to use Gulag Cleaner.
+> * '-v': Display the current version of Gulag Cleaner.
 
 ## License
 Gulag Cleaner is distributed under the GPL-3 license, which means it's open-source and free to use.
