@@ -1,4 +1,5 @@
 dist
 multiplepdf
+tests.ipynb
 gulagcleaner.egg-info
 gulagcleaner/__pycache__
