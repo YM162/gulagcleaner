@@ -6,33 +6,28 @@ This tool does not just crop the ads out of the PDF, instead, we extract the ori
 
 In addition to removing advertisements, Gulag Cleaner is also capable of extracting metadata, such as the author, subject, university, and more, from the file.
 
-## Installation
+# Web Version
 
-To install Gulag Cleaner, simply run the following command in your terminal:
+This tool can be used without installation from [our website](https://gulagcleaner.com) (in Spanish) completly for free.
+
+
+# Installation
+
+To install Gulag Cleaner, please [download](https://www.python.org/downloads/) and [install](https://wiki.python.org/moin/BeginnersGuide/Download) Python and then run the following command in your terminal:
 ```
 pip install gulagcleaner
 ```
 
-## Usage
+# Usage
 
 Gulag Cleaner can be used through both a Command Line Interface (CLI) and in your code.
 
-### Command Line Interface
+## Command Line Interface
 
 To use Gulag Cleaner through the CLI, simply run the following command, replacing `<filename>` with the name of your PDF file:
 
 ```
 gulagcleaner [-r] [-h] [-o] [-v] <filename>
-```
-
-### Code
-
-To use Gulag Cleaner in your code, you can use the following code snippet:
-
-```python
-from gulagcleaner.extract import clean_pdf
-
-return_msg = clean_pdf("file.pdf")
 ```
 
 ## Options
@@ -44,8 +39,18 @@ Gulag Cleaner provides several options for its usage:
 > * '-h': Display the help message, providing information on how to use Gulag Cleaner.
 > * '-v': Display the current version of Gulag Cleaner.
 
-## License
+## Code
+
+To use Gulag Cleaner in your code, you can use the following code snippet:
+
+```python
+from gulagcleaner.extract import clean_pdf
+
+return_msg = clean_pdf("file.pdf")
+```
+
+# License
 Gulag Cleaner is distributed under the GPL-3 license, which means it's open-source and free to use.
 
-## Contributing
+# Contributing
 We're always looking for ways to improve Gulag Cleaner, and we welcome contributions from the community. If you have ideas for improvements or bug fixes, please feel free to submit a pull request.

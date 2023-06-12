@@ -37,7 +37,7 @@ def main():
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("Actual version: 0.5.2")
+        print("Actual version: 0.6.0")
         return
 
     # Get the pdf_path argument
