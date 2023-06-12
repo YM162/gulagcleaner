@@ -47,7 +47,7 @@ def main():
     pdf_path = sys.argv[-1]
 
     # Check if the file exists
-    if not os.path.exists(pdf_path):
+    if not exists(pdf_path):
         print("File not found.")
         return
 
