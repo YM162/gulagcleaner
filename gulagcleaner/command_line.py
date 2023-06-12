@@ -37,7 +37,7 @@ def main():
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("Current version: 0.6.2")
+        print("Current version: 0.6.3")
         return
 
     # Get the pdf_path argument
@@ -64,11 +64,10 @@ def main():
         intermediate = True
     else:
         method = "new"
+        intermediate = False
     
     # Call the cleaning function
     return_msg = clean_pdf(pdf_path, output_path, method)
-    if intermediate:
-        os.remove(pdf_path)
 
     if return_msg["Success"]:
         print("Cleaning successful. File saved in", return_msg["return_path"])
@@ -85,6 +84,9 @@ def main():
             print("Failed to extract metadata:", e)            
     else:
         print("Error:", return_msg["Error"])
+
+    if intermediate:
+        os.remove(pdf_path)
 
 if __name__ == "__main__":
     print('Call from the "gulagcleaner" command.')
