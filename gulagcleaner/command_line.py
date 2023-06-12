@@ -65,23 +65,25 @@ def main():
     else:
         method = "new"
         intermediate = False
-    
+        
+    #Extract metadata
+    try:
+        metadict = extract_metadata(pdf_path)
+        print("Metadata:")
+        print("Archivo: " + metadict["Archivo"])
+        print("Autor: " + metadict["Autor"])
+        print("Asignatura: " + metadict["Asignatura"])
+        print("Curso y Grado: " + metadict["Curso y Grado"])
+        print("Facultad: " + metadict["Facultad"])
+        print("Universidad: " + metadict["Universidad"])
+    except Exception as e:
+        print("Failed to extract metadata:", e)         
     # Call the cleaning function
     return_msg = clean_pdf(pdf_path, output_path, method)
 
     if return_msg["Success"]:
         print("Cleaning successful. File saved in", return_msg["return_path"])
-        try:
-            metadict = extract_metadata(pdf_path)
-            print("Metadata:")
-            print("Archivo: " + metadict["Archivo"])
-            print("Autor: " + metadict["Autor"])
-            print("Asignatura: " + metadict["Asignatura"])
-            print("Curso y Grado: " + metadict["Curso y Grado"])
-            print("Facultad: " + metadict["Facultad"])
-            print("Universidad: " + metadict["Universidad"])
-        except Exception as e:
-            print("Failed to extract metadata:", e)            
+               
     else:
         print("Error:", return_msg["Error"])
 
