@@ -17,7 +17,7 @@ In addition to removing advertisements, Gulag Cleaner is also capable of extract
 
 This tool can be used without installation directly from [our website](https://gulagcleaner.com) (in Spanish).
 
-[![Gulag Cleaner webpage](./assets/web_mockup.png)](https://gulagcleaner.com)
+[![Gulag Cleaner webpage](https://raw.githubusercontent.com/YM162/gulagcleaner/main/assets/web_mockup.png)](https://gulagcleaner.com)
 
 # Installation
 
