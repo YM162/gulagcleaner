@@ -1,4 +1,3 @@
-import os
 from pdfrw import PdfReader, PdfWriter
 from pdfrw.findobjs import wrap_object, find_objects
 from pdfrw.objects import PdfName
@@ -22,15 +21,14 @@ def find_iobj_pairs(first_page, second_page):
     else:
         return (first_page,first_page.index(comunes[1]))
     
-def deembed(pdf_path, replace=False, method="new"):
+def clean_pdf(pdf_path, output_path="", method="new"):
     """
     De-embeds the PDF file and creates a new PDF file in the same folder with each embedded page in a new page.
 
     Args:
         pdf_path (str): The path to the PDF file.
-        replace (bool, optional): If set to True, the original file will be replaced by the de-embedded file.
-            Default is False.
-        method (str, optional): Defines what strategy will be used to deembed the pdf file. Can be "old" or "new".
+        output_path (str): The path to the output PDF file.
+        method (str, optional): Defines what strategy will be used to clean the pdf file. Can be "new", "old" or "naive".
             Default is "new".
 
     Returns:
@@ -39,6 +37,7 @@ def deembed(pdf_path, replace=False, method="new"):
             return_path (str): The path to the de-embedded file if successful.
             error (str): An error description if the process was unsuccessful.
     """
+
     if not pdf_path.endswith(".pdf"):
         return {
             "Success": False,
@@ -46,12 +45,17 @@ def deembed(pdf_path, replace=False, method="new"):
             "Error": "File is not a .pdf file.",
         }
 
+    if output_path == "":
+        output_path = pdf_path[:-4] + "_clean.pdf"
+
     try:
         pdf = PdfReader(pdf_path)
 
         # Old method, for files older than 18/05/2023. Works by finding the embedded pages and creating new pages with them.
         if method=="old":
-            xobjs = list(find_objects(pdf.pages, valid_subtypes=(PdfName.Form, PdfName.Dummy)))
+            xobjs = []
+            for page in pdf.pages:
+                xobjs.extend([page.Resources.XObject[object] for object in page.Resources.XObject if "EmbeddedPdfPage" in str(object)])
             newpages = [wrap_object(item, 1000, 0.5 * 72) for item in xobjs]
 
             if not xobjs:
@@ -84,21 +88,25 @@ def deembed(pdf_path, replace=False, method="new"):
                 newpage.Annots = []
                 newpages.append(newpage)
 
+        #Naive method. Just detects the pages with ads and crops them. THIS METHOD IS NOT RECOMENDED AT ALL. It is very unreliable and when copying text from the outputed pdf the ads and watermaks are copied as well, because we are just "hiding" them from the user, not truly removing them.
+        elif method=="naive":
+            #Not yet implemented.
+            newpages = []
+
         else:
             return {
                 "Success": False,
                 "return_path": "",
-                "Error": "Deembeding method not found."
+                "Error": "Cleaning method not found."
             }
         
-        output = pdf_path[:-4] + (".pdf" if replace else "_clean.pdf")
-        writer = PdfWriter(output)
+        writer = PdfWriter(output_path)
         writer.addpages(newpages)
         writer.write()
 
         return {
             "Success": True,
-            "return_path": output,
+            "return_path": output_path,
             "Error": ""
             }
     

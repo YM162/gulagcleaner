@@ -30,9 +30,9 @@ gulagcleaner [-r] [-h] [-o] [-v] <filename>
 To use Gulag Cleaner in your code, you can use the following code snippet:
 
 ```python
-from gulagcleaner.gulagcleaner_extract import deembed
+from gulagcleaner.extract import clean_pdf
 
-return_msg = deembed("file.pdf")
+return_msg = clean_pdf("file.pdf")
 ```
 
 ## Options
@@ -40,7 +40,7 @@ return_msg = deembed("file.pdf")
 Gulag Cleaner provides several options for its usage:
 
 > * '-r': Replace the original file with the cleaned version.
-> * '-o': Use the old deembeding method (for files older than 18/05/2023).
+> * '-o': Use the old cleaning method (for files older than 18/05/2023).
 > * '-h': Display the help message, providing information on how to use Gulag Cleaner.
 > * '-v': Display the current version of Gulag Cleaner.
 
