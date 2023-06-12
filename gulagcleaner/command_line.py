@@ -1,4 +1,6 @@
-from gulagcleaner import gulagcleaner_extract
+from gulagcleaner.extract import deembed
+from gulagcleaner.decrypt import decrypt_pdf
+from gulagcleaner.metadata import extract_metadata
 from os.path import exists
 
 def main():
@@ -55,25 +57,31 @@ def main():
      # Check if the -o argument is present
     if '-o' in sys.argv:
         method = "old"
+        filename = decrypt_pdf(filename)
+        intermediate = True
     else:
         method = "new"
     
     # Call the deembed function
-    return_msg = gulagcleaner_extract.deembed(filename, replace,method)
+    return_msg = deembed(filename, replace, method)
+    if intermediate:
+        os.remove(filename)
+
     if return_msg["Success"]:
         print("Deembedding successful. File saved in", return_msg["return_path"])
-        if return_msg["Meta"] != {}:
+        try:
+            metadict = extract_metadata(filename)
             print("Metadata:")
-            print("Archivo: " + return_msg["Meta"]["Archivo"])
-            print("Autor: " + return_msg["Meta"]["Autor"])
-            print("Asignatura: " + return_msg["Meta"]["Asignatura"])
-            print("Curso y Grado: " + return_msg["Meta"]["Curso y Grado"])
-            print("Facultad: " + return_msg["Meta"]["Facultad"])
-            print("Universidad: " + return_msg["Meta"]["Universidad"])
+            print("Archivo: " + metadict["Archivo"])
+            print("Autor: " + metadict["Autor"])
+            print("Asignatura: " + metadict["Asignatura"])
+            print("Curso y Grado: " + metadict["Curso y Grado"])
+            print("Facultad: " + metadict["Facultad"])
+            print("Universidad: " + metadict["Universidad"])
+        except Exception as e:
+            print("Failed to extract metadata:", e)            
     else:
         print("Error:", return_msg["Error"])
-
-
 
 if __name__ == "__main__":
     print('Call from the "gulagcleaner" command.')
