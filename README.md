@@ -1,4 +1,11 @@
+
 # Gulag Cleaner
+
+
+[![Twitter](https://a11ybadges.com/badge?logo=twitter)](https://twitter.com/gulagcleaner)
+[![Instagram](https://a11ybadges.com/badge?logo=instagram)](https://www.instagram.com/gulagcleaner/)
+[![Ko-fi](https://a11ybadges.com/badge?logo=kofi)](https://ko-fi.com/L3L86VEX9)
+
 
 Gulag Cleaner is a tool designed to remove advertisements from PDFs, making it easier to read and navigate documents without being disrupted by unwanted ads.
 
@@ -8,8 +15,9 @@ In addition to removing advertisements, Gulag Cleaner is also capable of extract
 
 # Web Version
 
-This tool can be used without installation from [our website](https://gulagcleaner.com) (in Spanish) completly for free.
+This tool can be used without installation directly from [our website](https://gulagcleaner.com) (in Spanish).
 
+[![Gulag Cleaner webpage](./assets/web_mockup.png)](https://gulagcleaner.com)
 
 # Installation
 
