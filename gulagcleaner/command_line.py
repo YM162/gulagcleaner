@@ -37,7 +37,7 @@ def main():
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("Current version: 0.6.3")
+        print("Current version: 0.6.4")
         return
 
     # Get the pdf_path argument
@@ -65,7 +65,7 @@ def main():
     else:
         method = "new"
         intermediate = False
-        
+
     #Extract metadata
     try:
         metadict = extract_metadata(pdf_path)
@@ -78,12 +78,12 @@ def main():
         print("Universidad: " + metadict["Universidad"])
     except Exception as e:
         print("Failed to extract metadata:", e)         
+
     # Call the cleaning function
     return_msg = clean_pdf(pdf_path, output_path, method)
 
     if return_msg["Success"]:
         print("Cleaning successful. File saved in", return_msg["return_path"])
-               
     else:
         print("Error:", return_msg["Error"])
 
