@@ -17,9 +17,9 @@ def find_iobj_pairs(first_page, second_page):
     """
     comunes = tuple(set(first_page).intersection(second_page))
     if first_page.index(comunes[0]) < first_page.index(comunes[1]):
-        return (first_page,first_page.index(comunes[0]))
+        return (first_page,first_page.index(comunes[0]),first_page.index(comunes[1]))
     else:
-        return (first_page,first_page.index(comunes[1]))
+        return (first_page,first_page.index(comunes[1]),first_page.index(comunes[0]))
     
 def clean_pdf(pdf_path, output_path="", method="new"):
     """
@@ -79,7 +79,7 @@ def clean_pdf(pdf_path, output_path="", method="new"):
                     pares = find_iobj_pairs(content_list[i], content_list[i-1])
                 else:
                     pares = find_iobj_pairs(content_list[i], content_list[i + 1])
-                new_contents.append(pares[0][pares[1]-2:pares[1]+6])
+                new_contents.append(pares[0][pares[1]-2:pares[2]+4])
 
             newpages = []
             for i,page in enumerate([page for page in pdf.pages if len(page.Contents)>1]):
