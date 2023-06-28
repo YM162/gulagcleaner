@@ -12,12 +12,10 @@ def main():
     Available CLI arguments:
     -h : Display help information.
     -r : Replace the original file with the cleaned file.
-    -o : Use the old cleaning method (for files older than 18/05/2023).
     -v : Display the version of the program.
 
     '''
     import sys
-    import os.path
 
     # Check for the -h argument
     if '-h' in sys.argv:
@@ -31,18 +29,17 @@ def main():
         print("Optional arguments:")
         print("  -h            Show this help message.")
         print("  -r            Replace the original file with the cleaned file.")
-        print("  -o            Use the old cleaning method (for files older than 18/05/2023).")
         print("  -v            Show the version of the program.")
         return
 
     # Check for the -v argument
     if '-v' in sys.argv:
-        print("Current version: 0.6.4")
+        print("Current version: 0.7.0")
         return
 
     # Get the pdf_path argument
     if len(sys.argv) < 2:
-        print('Usage: gulagcleaner [-h] [-r] [-o] [-v] <pdf_path>')
+        print('Usage: gulagcleaner [-h] [-r] [-v] <pdf_path>')
         return
     pdf_path = sys.argv[-1]
 
@@ -50,21 +47,15 @@ def main():
     if not exists(pdf_path):
         print("File not found.")
         return
-
+    
     # Check if the -r argument is present
     if '-r' in sys.argv:
         output_path = pdf_path
     else:
         output_path = pdf_path[:-4] + "_clean.pdf"
 
-     # Check if the -o argument is present
-    if '-o' in sys.argv:
-        method = "old"
-        pdf_path = decrypt_pdf(pdf_path)
-        intermediate = True
-    else:
-        method = "new"
-        intermediate = False
+    #We decrypt the PDF file
+    pdf_path = decrypt_pdf(pdf_path)
 
     #Extract metadata
     try:
@@ -80,15 +71,12 @@ def main():
         print("Failed to extract metadata:", e)         
 
     # Call the cleaning function
-    return_msg = clean_pdf(pdf_path, output_path, method)
+    return_msg = clean_pdf(pdf_path, output_path)
 
     if return_msg["Success"]:
         print("Cleaning successful. File saved in", return_msg["return_path"])
     else:
         print("Error:", return_msg["Error"])
-
-    if intermediate:
-        os.remove(pdf_path)
 
 if __name__ == "__main__":
     print('Call from the "gulagcleaner" command.')

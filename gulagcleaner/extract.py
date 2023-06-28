@@ -21,14 +21,14 @@ def find_iobj_pairs(first_page, second_page):
     else:
         return (first_page,first_page.index(comunes[1]),first_page.index(comunes[0]))
     
-def clean_pdf(pdf_path, output_path="", method="new"):
+def clean_pdf(pdf_path, output_path="", method="auto"):
     """
     De-embeds the PDF file and creates a new PDF file in the same folder with each embedded page in a new page.
 
     Args:
         pdf_path (str): The path to the PDF file.
         output_path (str): The path to the output PDF file.
-        method (str, optional): Defines what strategy will be used to clean the pdf file. Can be "new", "old" or "naive".
+        method (str, optional): Defines what strategy will be used to clean the pdf file. Can be "new", "old", "naive" or "auto".
             Default is "new".
 
     Returns:
@@ -92,6 +92,37 @@ def clean_pdf(pdf_path, output_path="", method="new"):
         elif method=="naive":
             #Not yet implemented.
             newpages = []
+            for page in pdf.pages:
+                page_type = get_page_type(page)
+                if page_type == "banner_ads":
+                    newpage = page.copy()
+                    #TODO: Set MediaBox,BleedBox...etc
+
+
+                    newpages.append(newpage)
+                
+                if page_type == "watermark":
+                    newpage = page.copy()
+                    #TODO: Set MediaBox,BleedBox...etc
+                    
+
+
+                    newpages.append(newpage)
+                
+                if page_type == "full_page_ads":
+                    continue
+
+                if page_type == "unknown":
+                    newpages.append(page)
+                
+                logo_dims = [(71,390),(37,203),(73,390)]
+                for logo in [image for image in find_objects(page,valid_subtypes=(PdfName.Image, PdfName.Dummy)) if (int(image.Height),int(image.Width)) in logo_dims]:
+                    logo.Height = 0
+                    logo.Width = 0
+                #TODO: We scale annotations to 0,0
+
+        elif method == "auto":
+            return auto_clean_pdf(pdf, pdf_path, output_path)
 
         else:
             return {
@@ -117,3 +148,49 @@ def clean_pdf(pdf_path, output_path="", method="new"):
             "Error": str(e),
             "Meta": {}
         }
+
+
+def auto_clean_pdf(pdf, pdf_path, output_path):
+    #Test for the new method
+    content_list = []
+    for page in pdf.pages:
+        content = [content.indirect for content in page.Contents]
+        if len(content)>1:
+            content_list.append(content)
+    
+    if len(content_list)>0 and len(tuple(set(content_list[0]).intersection(content_list[1])))>1:
+        return clean_pdf(pdf_path, output_path, method="new")
+    
+    #Test for the old method
+    xobjs = []
+    for page in pdf.pages:
+        xobjs.extend([page.Resources.XObject[object] for object in page.Resources.XObject if "EmbeddedPdfPage" in str(object)])
+    
+    if len(xobjs)>0:
+        return clean_pdf(pdf_path, output_path, method="old")
+    
+    #We don't know what method to use, so we use the naive one.
+    return clean_pdf(pdf_path, output_path, method="naive")
+
+def get_page_type(page):
+    images = [(image.Height,image.Width) for image in find_objects(page,valid_subtypes=(PdfName.Image, PdfName.Dummy))]
+    
+    #There has to be a better way to do this, but this works for 99.9% of the cases.
+    logo_dims = [(71,390),(37,203),(73,390)]
+    horizontal_banner_dims = [(247,1414),(213,1219),(215,1219),(249,1414),(217,1240)]
+    vertical_banner_dims = [(1753,170),(1518,248),(1520,147),(1753,177),(1751,171),(1537,147)]
+    full_page_dims = [(842,595),(1754,1240),(2526,1785),(1733,1219),(3508,2480),(2339,1653)]
+
+    has_logo = len(tuple(set(logo_dims).intersection(images)))>0
+    has_horizontal_banner = len(tuple(set(logo_dims).intersection(images)))>0
+    has_vertical_banner = len(tuple(set(logo_dims).intersection(images)))>0
+    has_full_page = len(tuple(set(logo_dims).intersection(images)))>0
+
+    if has_horizontal_banner and has_vertical_banner:
+        return "banner_ads"
+    elif has_full_page:
+        return "full_page_ads"
+    elif has_logo:
+        return "watermark"
+    else:
+        return "unknown"
