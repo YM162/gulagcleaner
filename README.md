@@ -32,10 +32,10 @@ Gulag Cleaner can be used through both a Command Line Interface (CLI) and in you
 
 ## Command Line Interface
 
-To use Gulag Cleaner through the CLI, simply run the following command, replacing `<filename>` with the name of your PDF file:
+To use Gulag Cleaner through the CLI, simply run the following command, replacing `<filename>` with the name of one or more PDF files or folders containing PDF:
 
 ```
-gulagcleaner [-r] [-h] [-v] <filename>
+gulagcleaner [-r] [-s] [-h] [-v] <filename>...
 ```
 
 ## Options
@@ -43,6 +43,7 @@ gulagcleaner [-r] [-h] [-v] <filename>
 Gulag Cleaner provides several options for its usage:
 
 > * '-r': Replace the original file with the cleaned version.
+> * '-s': Do not show metadata about cleaned files.
 > * '-h': Display the help message, providing information on how to use Gulag Cleaner.
 > * '-v': Display the current version of Gulag Cleaner.
 
