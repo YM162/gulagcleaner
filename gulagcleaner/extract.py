@@ -1,6 +1,6 @@
 from pdfrw import PdfReader, PdfWriter
 from pdfrw.findobjs import wrap_object, find_objects
-from pdfrw.objects import PdfName
+from pdfrw.objects import PdfName, PdfArray
 
 def find_iobj_pairs(first_page, second_page):
     """
@@ -86,6 +86,8 @@ def clean_pdf(pdf_path, output_path="", method="auto"):
                 newpage = page.copy()
                 newpage.Contents = [pdf.indirect_objects[iobj] for iobj in new_contents[i]]
                 newpage.Annots = []
+                newpage.MediaBox = PdfArray([0,0,float(newpage.MediaBox[2])-float(newpage.MediaBox[0]),float(newpage.MediaBox[3])-float(newpage.MediaBox[1])])
+                newpage.BleedBox = PdfArray([0,0,float(newpage.BleedBox[2])-float(newpage.BleedBox[0]),float(newpage.BleedBox[3])-float(newpage.BleedBox[1])])
                 newpages.append(newpage)
 
         #Naive method. Just detects the pages with ads and crops them. THIS METHOD IS NOT RECOMENDED AT ALL. It is very unreliable and when copying text from the outputed pdf the ads and watermaks are copied as well, because we are just "hiding" them from the user, not truly removing them.
