@@ -62,3 +62,10 @@ Gulag Cleaner is distributed under the GPL-3 license, which means it's open-sour
 
 # Contributing
 We're always looking for ways to improve Gulag Cleaner, and we welcome contributions from the community. If you have ideas for improvements or bug fixes, please feel free to submit a pull request.
+
+## TODO
+If you want to help, these are the top priorities right now:
+
+* Revamp the argument parsing. We should use some parsing library to allow for short "-v" and long "--version" arguments. Idealy it should support parameters for each argument.
+
+* Add the "Naive" cleaning method. This method is just a fallback that crops the Ads by zooming in and moving the MediaBox. This is not ideal, but there will always be edge cases not covered in the other methods and doing this better than giving an error.

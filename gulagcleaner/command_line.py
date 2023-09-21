@@ -2,7 +2,7 @@ from gulagcleaner.extract import clean_pdf
 from gulagcleaner.decrypt import decrypt_pdf
 from gulagcleaner.metadata import extract_metadata
 from os.path import exists, isdir, join
-from os import listdir
+from os import listdir, remove
 
 def parseArgs():
     '''
@@ -58,7 +58,7 @@ def main():
 
     # Check for the -v argument
     if arguments["version"]:
-        print("Current version: 0.8.0")
+        print("Current version: 0.8.2")
         return
 
     # Get the pdf_path argument
@@ -108,9 +108,9 @@ def main():
 
         # Call the cleaning function
         return_msg = clean_pdf(pdf_path, output_path)
-
+        remove(pdf_path)
         if return_msg["Success"]:
-            print(pdf_path + "cleaning successful. File saved in " + 
+            print("Cleaning successful. File saved in " + 
                   return_msg["return_path"])
         else:
             print("Error cleaning " + pdf_path + ": " + return_msg["Error"])
