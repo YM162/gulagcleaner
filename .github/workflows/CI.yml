@@ -76,7 +76,7 @@ jobs:
 
     - name: build windows 32bit binaries
       if: matrix.os == 'windows'
-      run: cibuildwheel --output-dir dist
+      run: cibuildwheel gulagcleaner_python --output-dir dist
       env:
         CIBW_BUILD: 'cp3${{ matrix.python-version }}-win32'
         CIBW_PLATFORM: windows
