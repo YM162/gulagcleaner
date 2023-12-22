@@ -1,3 +1,36 @@
 [build-system]
-requires = ["setuptools>=42"]
+requires = ["setuptools", "setuptools-rust"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "gulagcleaner"
+version = "0.0.1"
+description = "Ad removal tool for PDFs written in python."
+authors = [
+  {name = "YM162", email = "david.fontaneda16@gmail.com"}]
+readme  = "README.md"
+dependencies = [
+  "pikepdf>=5.1.2","pdfminer.six>=20220524","pdfrw>=0.4"
+]
+license = {file = "LICENSE"}
+classifiers = ["Programming Language :: Python :: 3",
+                "License :: OSI Approved :: MIT License",
+                "Operating System :: OS Independent"]
+keywords = ["wuolah", "pdf", "ads", "advertisments", "cleaner", "gulagcleaner"]
+
+[project.urls]
+homepage = "https://github.com/YM162/gulag-cleaner-cli"
+repository = "https://github.com/YM162/gulag-cleaner-cli.git"
+issues = "https://github.com/YM162/gulag-cleaner-cli/issues"
+
+[project.scripts]
+gulagcleaner = "gulagcleaner.command_line:main"
+
+
+[tool.setuptools.packages]
+# Pure Python packages/modules
+find = { where = ["python"] }
+
+[[tool.setuptools-rust.ext-modules]]
+# Private Rust extension module to be nested into Python package
+target = "gulagcleaner._lib"  # The last part of the name (e.g. "_lib") has to match lib.name in Cargo.toml,

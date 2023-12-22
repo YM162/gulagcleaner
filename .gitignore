@@ -3,3 +3,9 @@ multiplepdf
 tests.ipynb
 gulagcleaner.egg-info
 gulagcleaner/__pycache__
+target
+useful_info+scripts.md
+.env
+.venv
+python/gulagcleaner/__pycache__
+*.pyd
