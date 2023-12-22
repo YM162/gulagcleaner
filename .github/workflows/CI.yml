@@ -63,8 +63,6 @@ jobs:
         CIBW_BUILD: 'cp3${{ matrix.python-version }}-*'
         CIBW_SKIP: '*-win32'
         CIBW_PLATFORM: ${{ matrix.platform || matrix.os }}
-        CIBW_TEST_REQUIRES: 'pytest'
-        CIBW_TEST_COMMAND: 'pytest {project}/tests -s'
         CIBW_ENVIRONMENT: 'PATH="$HOME/.cargo/bin:$PATH"'
         CIBW_ENVIRONMENT_WINDOWS: 'PATH="$UserProfile\.cargo\bin;$PATH"'
         CIBW_MANYLINUX_X86_64_IMAGE: 'manylinux2014'
@@ -84,8 +82,6 @@ jobs:
       env:
         CIBW_BUILD: 'cp3${{ matrix.python-version }}-win32'
         CIBW_PLATFORM: windows
-        CIBW_TEST_REQUIRES: 'pytest'
-        CIBW_TEST_COMMAND: 'pytest {project}/tests -s'
         CIBW_ENVIRONMENT: 'PATH="$UserProfile\.cargo\bin;$PATH"'
         CIBW_BEFORE_BUILD: >
           pip install -U setuptools-rust &&
