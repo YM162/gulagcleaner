@@ -4,7 +4,7 @@ tests.ipynb
 gulagcleaner.egg-info
 gulagcleaner/__pycache__
 target
-useful_info+scripts.md
+useful_info+scripts+TODO.md
 .env
 .venv
 python/gulagcleaner/__pycache__

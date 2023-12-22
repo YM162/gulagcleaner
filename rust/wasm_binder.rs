@@ -1,2 +1,0 @@
-//It would be nice to abstract the #[wasm_bindgen] or however its called into here, so i can still use the same code for the wasm and the python version.
-#[path = "gulagcleaner/gulagcleaner.rs"] mod gulagcleaner;
