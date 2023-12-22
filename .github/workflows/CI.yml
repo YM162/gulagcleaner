@@ -49,6 +49,7 @@ jobs:
       run: pip install -U setuptools wheel twine cibuildwheel build
 
     - name: build sdist
+      working-directory: gulagcleaner_python
       if: matrix.os == 'ubuntu' && matrix.python-version == '8'
       run: |
         pip install -U setuptools-rust
