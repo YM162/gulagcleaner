@@ -29,11 +29,11 @@ jobs:
           ls: dir
 
     runs-on: ${{ format('{0}-latest', matrix.os) }}
+    defaults:
+      run:
+        working-directory: gulagcleaner_python
     steps:
     - uses: actions/checkout@v2
-
-    - name: move to the gulagcleaner_python directory
-      run: cd gulagcleaner_python
 
     - name: set up python
       uses: actions/setup-python@v1
