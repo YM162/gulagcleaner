@@ -151,7 +151,7 @@ dependencies = [
 
 [[package]]
 name = "gulagcleaner"
-version = "0.1.0"
+version = "0.10.0"
 dependencies = [
  "flate2",
  "lopdf",
@@ -159,7 +159,7 @@ dependencies = [
 
 [[package]]
 name = "gulagcleaner_python"
-version = "0.1.0"
+version = "0.10.0"
 dependencies = [
  "gulagcleaner",
  "pyo3",
@@ -167,7 +167,7 @@ dependencies = [
 
 [[package]]
 name = "gulagcleaner_wasm"
-version = "0.5.0"
+version = "0.10.0"
 dependencies = [
  "gulagcleaner",
  "wasm-bindgen",

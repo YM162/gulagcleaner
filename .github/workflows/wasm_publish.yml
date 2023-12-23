@@ -3,7 +3,7 @@ name: Build WASM and publish in the WASM_build branch
 on:
   push:
     branches:
-      - rust_bindings
+      - main
 
 jobs:
   build:
