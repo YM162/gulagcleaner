@@ -8,11 +8,11 @@ version = "0.0.1"
 description = "Ad removal tool for PDFs."
 authors = [
   {name = "YM162", email = "david.fontaneda16@gmail.com"}]
-readme  = "../README.md"
+readme  = "README.md"
 dependencies = [
   "pikepdf>=5.1.2","pdfminer.six>=20220524"
 ]
-license = {file = "../LICENSE"}
+license = {file = "LICENSE"}
 classifiers = ["Programming Language :: Python :: 3",
                 "License :: OSI Approved :: MIT License",
                 "Operating System :: OS Independent"]

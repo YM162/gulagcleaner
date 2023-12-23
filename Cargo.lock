@@ -150,7 +150,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "gulagcleaner"
+name = "gulagcleaner_python"
+version = "0.10.0"
+dependencies = [
+ "gulagcleaner_rs",
+ "pyo3",
+]
+
+[[package]]
+name = "gulagcleaner_rs"
 version = "0.10.0"
 dependencies = [
  "flate2",
@@ -158,18 +166,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "gulagcleaner_python"
-version = "0.10.0"
-dependencies = [
- "gulagcleaner",
- "pyo3",
-]
-
-[[package]]
 name = "gulagcleaner_wasm"
 version = "0.10.0"
 dependencies = [
- "gulagcleaner",
+ "gulagcleaner_rs",
  "wasm-bindgen",
 ]
 

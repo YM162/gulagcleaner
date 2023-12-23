@@ -18,4 +18,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 wasm-bindgen = "0.2"
-gulagcleaner = { path = "../gulagcleaner" }
+gulagcleaner_rs = { path = "../gulagcleaner_rs" }

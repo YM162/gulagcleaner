@@ -1,4 +1,4 @@
-from gulagcleaner.clean import clean_pdf
+from gulagcleaner.clean import clean_pdf_path
 from gulagcleaner.decrypt import decrypt_pdf
 from gulagcleaner.metadata import extract_metadata
 from os.path import exists, isdir, join
@@ -109,13 +109,13 @@ def main():
                 print("Failed to extract metadata:", e)
 
         # Call the cleaning function
-        return_msg = clean_pdf(pdf_path, output_path, force_naive)
+        return_msg = clean_pdf_path(pdf_path, output_path, force_naive)
         remove(pdf_path)
-        if return_msg["Success"]:
+        if return_msg["success"]:
             print("Cleaning successful. File saved in " + 
                   return_msg["return_path"])
         else:
-            print("Error cleaning " + pdf_path + ": " + return_msg["Error"])
+            print("Error cleaning " + pdf_path + ": " + return_msg["error"])
 
 if __name__ == "__main__":
     print('Call from the "gulagcleaner" command.')

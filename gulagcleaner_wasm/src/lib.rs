@@ -1,7 +1,7 @@
 use wasm_bindgen::prelude::*;
-use gulagcleaner;
+use gulagcleaner_rs;
 
 #[wasm_bindgen]
-pub fn clean_pdf(a: usize, b: usize) -> String {
-    gulagcleaner::clean_pdf(a, b)
+pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> Vec<u8> {
+    gulagcleaner_rs::clean_pdf(data, force_naive)
 }

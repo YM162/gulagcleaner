@@ -1,5 +1,5 @@
 [package]
-name = "gulagcleaner"
+name = "gulagcleaner_rs"
 version = "0.10.0"
 edition = "2021"
 authors = ["YM162 <david.fontaneda16@gmail.com>"]
@@ -13,8 +13,7 @@ keywords = ["wuolah", "pdf", "ads", "advertisments", "cleaner", "gulagcleaner"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-name = "gulagcleaner"
-crate-type = ["lib"]
+name = "gulagcleaner_rs"
 
 [dependencies]
 flate2 = "1.0.27"

@@ -18,4 +18,4 @@ path = "rust/lib.rs"
 
 [dependencies]
 pyo3 = { version = "0.20.0", features = ["extension-module"] }
-gulagcleaner = { path = "../gulagcleaner" }
+gulagcleaner_rs = { path = "../gulagcleaner_rs" }

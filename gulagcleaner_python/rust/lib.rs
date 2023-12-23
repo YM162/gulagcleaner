@@ -1,10 +1,9 @@
 use pyo3::prelude::*;
-use gulagcleaner;
 
 /// I only need to replace the sum_as_string function with the clean_pdf function, and the arguments to be u8 vectors. Maybe I need to change some types here to pure rust.
 #[pyfunction]
-pub fn clean_pdf(a: usize, b: usize) -> PyResult<String> {
-    Ok(gulagcleaner::clean_pdf(a, b))
+pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> PyResult<Vec<u8>> {
+    Ok(gulagcleaner_rs::clean_pdf(data, force_naive))
 }
 
 /// I only need to replace the sum_as_string function with the clean_pdf function
