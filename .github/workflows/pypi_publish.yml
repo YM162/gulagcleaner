@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - rust_bindings
+      - main
     tags:
       - '**'
   pull_request: {}
@@ -91,12 +91,12 @@ jobs:
     - name: list dist files
       run: ${{ matrix.ls || 'ls -lh' }} dist/
 
-    # - name: twine check
-    #   run: twine check dist/*
+    - name: twine check
+      run: twine check dist/*
 
-    # - name: upload to pypi
-    #   if: startsWith(github.ref, 'refs/tags/')
-    #   run: twine upload dist/*
-    #   env:
-    #     TWINE_USERNAME: __token__
-    #     TWINE_PASSWORD: ${{ secrets.pypi_token }}
+    - name: upload to pypi
+      if: startsWith(github.ref, 'refs/tags/')
+      run: twine upload dist/*
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.pypi_token }}
