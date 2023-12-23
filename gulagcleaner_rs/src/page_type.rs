@@ -1,3 +1,5 @@
+//WARNING: I need to add comments to all of the files in this folder. I will do it ASAP. I'm sorry for the inconvenience.
+
 use std::{error::Error, collections::HashSet};
 
 use lopdf::{Document, ObjectId};

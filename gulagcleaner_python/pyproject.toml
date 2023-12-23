@@ -33,4 +33,4 @@ find = { where = ["python"] }
 
 [[tool.setuptools-rust.ext-modules]]
 # Private Rust extension module to be nested into Python package
-target = "gulagcleaner._lib"  # The last part of the name (e.g. "_lib") has to match lib.name in Cargo.toml,
+target = "gulagcleaner._lib" 

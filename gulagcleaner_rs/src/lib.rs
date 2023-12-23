@@ -1,4 +1,5 @@
-//Here I should place my gulagcleaner-rust functions, and then call clean_pdf from python_binder.rs
+//WARNING: I need to add comments to all of the files in this folder. I will do it ASAP. I'm sorry for the inconvenience.
+
 
 pub mod method;
 

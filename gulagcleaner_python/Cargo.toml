@@ -10,7 +10,6 @@ repository = "https://github.com/YM162/gulag-cleaner-cli.git"
 license-file = "../LICENSE"
 keywords = ["wuolah", "pdf", "ads", "advertisments", "cleaner", "gulagcleaner"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 name = "gulagcleaner_python"
 crate-type = ["cdylib"]
