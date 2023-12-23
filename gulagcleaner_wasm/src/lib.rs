@@ -2,6 +2,6 @@ use wasm_bindgen::prelude::*;
 use gulagcleaner;
 
 #[wasm_bindgen]
-pub fn sum_as_string(a: usize, b: usize) -> String {
-    gulagcleaner::sum_as_string(a, b)
+pub fn clean_pdf(a: usize, b: usize) -> String {
+    gulagcleaner::clean_pdf(a, b)
 }

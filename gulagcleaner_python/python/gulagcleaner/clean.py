@@ -1,4 +1,4 @@
-from ._lib import sum_as_string  # export public parts of the binary extension
+from ._lib import clean_pdf  # export public parts of the binary extension
 
 #Here there should only be a function clean_pdf(pdf_path, output_path, force_naive) 
 #that calls the rust function and then saves the pdf in the given output_path.
@@ -11,4 +11,4 @@ from ._lib import sum_as_string  # export public parts of the binary extension
 #     """
 
 def clean_pdf(pdf_path, output_path, force_naive):
-    return sum_as_string(10,6)
+    return clean_pdf(10,6)
