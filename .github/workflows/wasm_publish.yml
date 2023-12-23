@@ -17,7 +17,7 @@ jobs:
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: build wasm
-        run: wasm-pack build gulagcleaner_wasm --target web --release --no-typescript -d ../WASM_build
+        run: wasm-pack build gulagcleaner_wasm --target web --release --no-typescript -d WASM_build
 
       - name: push to the WASM_build branch
         uses: s0/git-publish-subdir-action@develop
