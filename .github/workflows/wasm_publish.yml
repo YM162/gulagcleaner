@@ -1,14 +1,13 @@
-name: Build WASM and publish in the WASM_build branch
+name: Build as WASM and publish in npm
 
 on:
-  push:
-    branches:
-      - rust_bindings
+  release:
+    types: [published]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build and Push
+    name: Build and publish to npm
     steps:
       - name: git-checkout
         uses: actions/checkout@v4
@@ -18,18 +17,6 @@ jobs:
 
       - name: build wasm
         run: wasm-pack build gulagcleaner_wasm --target web --release -d WASM_build
-
-      # - name: remove gitignore
-      #   run: rm gulagcleaner_wasm/WASM_build/.gitignore
-
-      # - name: push to the WASM_build branch
-      #   uses: s0/git-publish-subdir-action@develop
-      #   env:
-      #     REPO: self
-      #     BRANCH: WASM_build # The branch name where you want to push the assets
-      #     FOLDER: gulagcleaner_wasm/WASM_build # The directory where your assets are generated
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
-      #     MESSAGE: "Build: ({sha}) {msg}" # The commit message
 
       - name: setup node
         uses: actions/setup-node@v3

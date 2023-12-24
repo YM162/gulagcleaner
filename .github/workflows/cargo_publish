@@ -1,0 +1,26 @@
+name: Publish to crates registry
+
+# on:
+#   release:
+#     types: [published]
+
+on:
+  push:
+    branches:
+      - rust_bindings
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Publish to crates registry
+    steps:
+        - uses: actions/checkout@v3
+        - uses: actions-rs/toolchain@v1
+          with:
+              toolchain: stable
+              override: true
+        - uses: katyo/publish-crates@v2
+          with:
+              registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+              path: './gulagcleaner_rs'
+              dry-run: true
