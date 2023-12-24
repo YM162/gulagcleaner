@@ -35,7 +35,7 @@ Gulag Cleaner can be used through both a Command Line Interface (CLI) and in you
 To use Gulag Cleaner through the CLI, simply run the following command, replacing `<filename>` with the name of one or more PDF files or folders containing PDF:
 
 ```
-gulagcleaner [-r] [-s] [-h] [-v] <filename>...
+gulagcleaner [-r] [-s] [-n] [-h] [-v] <filename>...
 ```
 
 ## Options
@@ -44,6 +44,7 @@ Gulag Cleaner provides several options for its usage:
 
 > * '-r': Replace the original file with the cleaned version.
 > * '-s': Do not show metadata about cleaned files.
+> * '-n': Force the naive cleaning method.
 > * '-h': Display the help message, providing information on how to use Gulag Cleaner.
 > * '-v': Display the current version of Gulag Cleaner.
 
@@ -54,7 +55,7 @@ To use Gulag Cleaner in your code, you can use the following code snippet:
 ```python
 from gulagcleaner.extract import clean_pdf
 
-return_msg = clean_pdf("file.pdf")
+return_msg = clean_pdf_path("input.pdf","output.pdf")
 ```
 
 # License
@@ -66,6 +67,8 @@ We're always looking for ways to improve Gulag Cleaner, and we welcome contribut
 ## TODO
 If you want to help, these are the top priorities right now:
 
-* Revamp the argument parsing. We should use some parsing library to allow for short "-v" and long "--version" arguments. Idealy it should support parameters for each argument.
-
-* Add the "Naive" cleaning method. This method is just a fallback that crops the Ads by zooming in and moving the MediaBox. This is not ideal, but there will always be edge cases not covered in the other methods and doing this better than giving an error.
+* Write tests for the package.
+* Add README.md (With code examples) for the rust and JS distributions.
+* Add comments to a lot of the rust code.
+* Optimize the rust code for performance improvements.
+* Add a new "clean_pdf_bytes()" function in python that does not require a file path, just the bytes.

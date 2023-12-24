@@ -33,9 +33,10 @@ def main():
     location.
     
     Available CLI arguments:
-    -h : Display help information.
     -r : Replace original files with their cleaned version.
     -s : Do not show metadata about cleaned files.
+    -n : Force the naive cleaning method.
+    -h : Display help information.
     -v : Display the version of the program.
 
     '''
@@ -43,7 +44,7 @@ def main():
 
     # Check for the -h argument
     if arguments["help"]:
-        print("Usage: gulagcleaner [-h] [-r] [-s] [-v] [-n] <pdf_path>")
+        print("Usage: gulagcleaner [-r] [-s] [-n] [-h] [-v] <pdf_path>")
         print("")
         print("Removes ads from PDF files.")
         print("")
@@ -51,21 +52,21 @@ def main():
         print("  pdf_path      PDF file to clean.")
         print("")
         print("Optional arguments:")
-        print("  -h            Show this help message.")
         print("  -r            Replace original files with their cleaned version.")
         print("  -s            Do not show metadata about cleaned files.")
-        print("  -v            Show the version of the program.")
         print("  -n            Force the naive cleaning method.")
+        print("  -h            Show this help message.")
+        print("  -v            Show the version of the program.")
         return
 
     # Check for the -v argument
     if arguments["version"]:
-        print("Current version: 0.8.2")
+        print("Current version: 0.10.1")
         return
 
     # Get the pdf_path argument
     if len(arguments["files"]) == 0:
-        print('Usage: gulagcleaner [-h] [-r] [-s] [-v] [-n] <pdf_path>...')
+        print('Usage: gulagcleaner [-r] [-s] [-n] [-h] [-v] <pdf_path>...')
         return
     
     replace = arguments["replace"]

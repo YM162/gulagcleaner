@@ -1,6 +1,6 @@
 [package]
 name = "gulagcleaner_python"
-version = "0.10.0"
+version = "0.10.1"
 edition = "2021"
 authors = ["YM162 <david.fontaneda16@gmail.com>"]
 description = "Ad removal tool for PDFs."
@@ -8,7 +8,7 @@ readme = "../README.md"
 homepage = "https://github.com/YM162/gulag-cleaner-cli"
 repository = "https://github.com/YM162/gulag-cleaner-cli.git"
 license-file = "../LICENSE"
-keywords = ["wuolah", "pdf", "ads", "advertisments", "cleaner", "gulagcleaner"]
+keywords = ["wuolah", "pdf", "ads", "advertisments", "gulagcleaner"]
 
 [lib]
 name = "gulagcleaner_python"

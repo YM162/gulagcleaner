@@ -190,7 +190,8 @@ pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> Vec<u8> {
     let mut return_stream = Vec::new();
     doc.save_to(&mut return_stream).unwrap();
 
-    return_stream.push(method_code);
+    // Should we still return the method_code now that we are going multi-language? I will leave it not returned for now.
+    //return_stream.push(method_code);
     return_stream
     //doc.save_to("test.pdf").unwrap();
 }
