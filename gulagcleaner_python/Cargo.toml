@@ -1,6 +1,6 @@
 [package]
 name = "gulagcleaner_python"
-version = "0.10.2"
+version = "0.10.3"
 edition = "2021"
 authors = ["YM162 <david.fontaneda16@gmail.com>"]
 description = "Ad removal tool for PDFs."

@@ -61,7 +61,7 @@ def main():
 
     # Check for the -v argument
     if arguments["version"]:
-        print("Current version: 0.10.2")
+        print("Current version: 0.10.3")
         return
 
     # Get the pdf_path argument
