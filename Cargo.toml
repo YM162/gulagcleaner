@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = [
+    "gulagcleaner_rs",
+    "gulagcleaner_python",
+    "gulagcleaner_wasm"
+]
