@@ -37,9 +37,9 @@ jobs:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: run ci
+      - name: run install
         working-directory: ./gulagcleaner_wasm/WASM_build
-        run: npm ci
+        run: npm install
 
       - name: publish to npm
         working-directory: ./gulagcleaner_wasm/WASM_build
