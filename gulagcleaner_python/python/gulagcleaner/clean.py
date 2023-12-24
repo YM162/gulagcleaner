@@ -24,6 +24,3 @@ def clean_pdf_path(pdf_path, output_path, force_naive=False):
                     "error": ""}
     except Exception as e:
         return {"success": False, "return_path": "", "error": str(e)}
-    
-# I would like to expose the clean_pdf function as a "clean_pdf_bytes(bytes)" function that already removes the trailing method byte and returns the cleaned bytes and the method. 
-# Working on it.
