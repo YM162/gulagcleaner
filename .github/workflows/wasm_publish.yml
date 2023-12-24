@@ -3,7 +3,7 @@ name: Build WASM and publish in the WASM_build branch
 on:
   push:
     branches:
-      - main
+      - rust_bindings
 
 jobs:
   build:
@@ -11,22 +11,39 @@ jobs:
     name: Build and Push
     steps:
       - name: git-checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: build wasm
-        run: wasm-pack build gulagcleaner_wasm --target web --release --no-typescript -d WASM_build
+        run: wasm-pack build gulagcleaner_wasm --target web --release -d WASM_build
 
-      - name: remove gitignore
-        run: rm gulagcleaner_wasm/WASM_build/.gitignore
+      # - name: remove gitignore
+      #   run: rm gulagcleaner_wasm/WASM_build/.gitignore
 
-      - name: push to the WASM_build branch
-        uses: s0/git-publish-subdir-action@develop
+      # - name: push to the WASM_build branch
+      #   uses: s0/git-publish-subdir-action@develop
+      #   env:
+      #     REPO: self
+      #     BRANCH: WASM_build # The branch name where you want to push the assets
+      #     FOLDER: gulagcleaner_wasm/WASM_build # The directory where your assets are generated
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
+      #     MESSAGE: "Build: ({sha}) {msg}" # The commit message
+
+      - name: setup node
+        working-directory: ./gulagcleaner_wasm/WASM_build
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: run ci
+        working-directory: ./gulagcleaner_wasm/WASM_build
+        run: npm ci
+
+      - name: publish to npm
+        working-directory: ./gulagcleaner_wasm/WASM_build
+        run: npm publish
         env:
-          REPO: self
-          BRANCH: WASM_build # The branch name where you want to push the assets
-          FOLDER: gulagcleaner_wasm/WASM_build # The directory where your assets are generated
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
-          MESSAGE: "Build: ({sha}) {msg}" # The commit message
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
