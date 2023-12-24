@@ -1,13 +1,8 @@
 name: Publish to crates registry
 
-# on:
-#   release:
-#     types: [published]
-
 on:
-  push:
-    branches:
-      - rust_bindings
+  release:
+    types: [published]
 
 jobs:
   build:
