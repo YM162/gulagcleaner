@@ -53,7 +53,7 @@ Gulag Cleaner provides several options for its usage:
 To use Gulag Cleaner in your code, you can use the following code snippet:
 
 ```python
-from gulagcleaner.extract import clean_pdf
+from gulagcleaner.clean import clean_pdf_path
 
 return_msg = clean_pdf_path("input.pdf","output.pdf")
 ```

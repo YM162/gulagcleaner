@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gulagcleaner"
-version = "0.10.3"
+version = "0.11.0"
 description = "Ad removal tool for PDFs."
 authors = [
   {name = "YM162", email = "david.fontaneda16@gmail.com"}]
@@ -16,7 +16,7 @@ license = {file = "LICENSE"}
 classifiers = ["Programming Language :: Python :: 3",
                 "License :: OSI Approved :: MIT License",
                 "Operating System :: OS Independent"]
-keywords = ["wuolah", "pdf", "ads", "advertisments", "gulagcleaner"]
+keywords = ["wuolah", "studocu", "pdf", "stucleaner", "gulagcleaner"]
 
 [project.urls]
 homepage = "https://github.com/YM162/gulag-cleaner-cli"

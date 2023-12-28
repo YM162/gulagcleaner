@@ -1,8 +1,9 @@
 use pyo3::prelude::*;
 
 #[pyfunction]
-pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> PyResult<Vec<u8>> {
-    Ok(gulagcleaner_rs::clean_pdf(data, force_naive))
+pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> PyResult<(Vec<u8>,u8)> {
+    let (clean_pdf,method_code) = gulagcleaner_rs::clean_pdf(data, force_naive);
+    Ok((clean_pdf,method_code))
 }
 
 #[pymodule]

@@ -11,21 +11,21 @@ use std::{collections::HashSet, error::Error};
 
 
 
-pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> Vec<u8> {
+pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> (Vec<u8>,u8) {
 
     //Load the PDF into a Document
     let mut doc = Document::load_mem(&data).unwrap();
     let pages = doc.get_pages();
 
-    //We first need to determine what method we're using, either "new" or "naive". We keep it like this to allow for future methods if needed.
+    //We first need to determine what method we're using, either "Wuolah", "StuDocu" or "Wuolah naive". We keep it like this to allow for future methods if needed.
 
     let method = method::Method::new(&doc, force_naive);
 
     //Each method should mark pages for deletion in to_delete and modify the contents of the pages.
     
     let (to_delete,method_code) = match method {
-        method::Method::New(content_list, to_delete) => {
-            println!("Using new method");
+        method::Method::Wuolah(content_list, to_delete) => {
+            println!("Using Wuolah method");
             let new_contents: Vec<Vec<(u32, u16)>> = content_list
                 .iter()
                 .enumerate()
@@ -95,6 +95,35 @@ pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> Vec<u8> {
 
             (to_delete,0)
         }
+
+        method::Method::StuDocu(content_list) => {
+            println!("Using StuDocu method");
+            let new_contents: Vec<Vec<(u32, u16)>> = content_list
+                .iter()
+                .skip(1)
+                .map(|x| {
+                    vec![x[1]]
+                })
+                .collect();
+
+            let vector: Vec<(&u32, &(u32, u16))> = pages
+                .iter()
+                .filter(|x| *x.0 != 1)
+                .collect();
+            for (i, page) in vector.iter().enumerate() {
+                let mutable_page = doc.get_object_mut(*page.1).unwrap().as_dict_mut().unwrap();
+                let contents_objects: Vec<Object> = new_contents[i]
+                    .iter()
+                    .map(|x| Object::Reference(*x))
+                    .collect();
+
+                mutable_page.set(*b"Contents", lopdf::Object::Array(contents_objects));
+
+                mutable_page.set("Annots", Object::Array(vec![]));
+            }
+            (vec![1],1)
+        }
+
         method::Method::Naive => {
             println!("Using naive method");
             let mut to_delete = Vec::new();
@@ -192,7 +221,7 @@ pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> Vec<u8> {
 
     // Should we still return the method_code now that we are going multi-language? I will leave it not returned for now.
     //return_stream.push(method_code);
-    return_stream
+    (return_stream,method_code)
     //doc.save_to("test.pdf").unwrap();
 }
 
@@ -300,4 +329,16 @@ fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Error>
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::clean_pdf;
+    #[test]
+    fn test_pdf() {
+        //Load some pdf bytes and clean it
+        let data = std::fs::read("../test.pdf").unwrap();
+        let (clean_pdf,_) = clean_pdf(data,0);
+        std::fs::write("../test_clean.pdf", clean_pdf).unwrap();
+    }
 }

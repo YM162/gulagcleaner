@@ -5,13 +5,14 @@ use std::collections::HashSet;
 use lopdf::Document;
 
 pub enum Method {
-    New(Vec<Vec<(u32, u16)>>, Vec<u32>),
+    Wuolah(Vec<Vec<(u32, u16)>>, Vec<u32>),
+    StuDocu(Vec<Vec<(u32, u16)>>),
     Naive
 }
 
 impl Method {
     pub fn new(doc: &Document, force_naive: u8) -> Self {
-        //0 for auto, 1 for new, 3 for naive
+        //0 for auto, 1 for wuolah, 2 for studocu 3 for wuolah naive
         if force_naive == 1 {
             return Self::Naive
         }
@@ -34,6 +35,17 @@ impl Method {
             })
             .map(|x| *x.0)
             .collect();
+        
+        if content_list
+            .iter()
+            .map(|x| x.len())
+            .filter(|x| *x==3)
+            .collect::<Vec<_>>()
+            .len() 
+            > 1 
+            {
+                return Self::StuDocu(content_list)
+            }
 
         if content_list.len() > 1
             && content_list[0]
@@ -43,9 +55,9 @@ impl Method {
                 .collect::<Vec<_>>()
                 .len()
                 > 1
-        {
-            return Self::New(content_list, to_delete);
-        }
+                {
+                    return Self::Wuolah(content_list, to_delete);
+                }
         Self::Naive
     }
 }

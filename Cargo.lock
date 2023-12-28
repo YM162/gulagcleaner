@@ -151,7 +151,7 @@ dependencies = [
 
 [[package]]
 name = "gulagcleaner_python"
-version = "0.10.3"
+version = "0.11.0"
 dependencies = [
  "gulagcleaner_rs",
  "pyo3",
@@ -159,7 +159,7 @@ dependencies = [
 
 [[package]]
 name = "gulagcleaner_rs"
-version = "0.10.3"
+version = "0.11.0"
 dependencies = [
  "flate2",
  "lopdf",
@@ -167,9 +167,10 @@ dependencies = [
 
 [[package]]
 name = "gulagcleaner_wasm"
-version = "0.10.3"
+version = "0.11.0"
 dependencies = [
  "gulagcleaner_rs",
+ "serde",
  "wasm-bindgen",
 ]
 
@@ -469,6 +470,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "ryu"
+version = "1.0.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f98d2aa92eebf49b69786be48e4477826b256916e84a57ff2a4f21923b48eb4c"
+
+[[package]]
 name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -492,6 +499,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_json"
+version = "1.0.108"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d1c7e3eac408d115102c4c24ad393e0821bb3a5df4d506a80f85f7a742a526b"
+dependencies = [
+ "itoa",
+ "ryu",
+ "serde",
 ]
 
 [[package]]
@@ -565,6 +583,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ed0d4f68a3015cc185aff4db9506a015f4b96f95303897bfa23f846db54064e"
 dependencies = [
  "cfg-if",
+ "serde",
+ "serde_json",
  "wasm-bindgen-macro",
 ]
 
