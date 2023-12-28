@@ -339,6 +339,7 @@ mod tests {
         //Load some pdf bytes and clean it
         let data = std::fs::read("../test.pdf").unwrap();
         let (clean_pdf,_) = clean_pdf(data,0);
+        //Print the length of the pdf
         std::fs::write("../test_clean.pdf", clean_pdf).unwrap();
     }
 }
