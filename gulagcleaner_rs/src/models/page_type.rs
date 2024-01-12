@@ -1,5 +1,3 @@
-//WARNING: I need to add comments to all of the files in this folder. I will do it ASAP. I'm sorry for the inconvenience.
-
 use std::{collections::HashSet, error::Error};
 
 use lopdf::{Document, ObjectId};
@@ -7,6 +5,7 @@ use lopdf::{Document, ObjectId};
 use super::method::{get_images, get_xobjs};
 
 #[derive(Default)]
+/// Represents the different methods used in the Gulag Cleaner application.
 pub enum PageType {
     BannerAds,
     FullPageAds,
@@ -47,6 +46,21 @@ const FULL_PAGE_DIMS: [(i64, i64); 7] = [
 ];
 
 impl PageType {
+    /// Get the type of a page based on its content.
+    ///
+    /// This function takes a document and a page ID as input and returns the type of the page.
+    /// The page type is determined by analyzing the images present in the page.
+    /// It checks for the presence of specific image dimensions to identify different types of pages,
+    /// such as banner ads, full-page ads, watermarks, or unknown types.
+    ///
+    /// # Arguments
+    ///
+    /// * `doc` - A reference to the document containing the page.
+    /// * `page` - A reference to the ID of the page.
+    ///
+    /// # Returns
+    ///
+    /// A `Result` containing the `PageType` of the page if successful, or a `Box<dyn Error>` if an error occurs.
     pub fn get_page_type(doc: &Document, page: &ObjectId) -> Result<PageType, Box<dyn Error>> {
         let xobjs = get_xobjs(doc, page)?;
         let images = get_images(doc, xobjs)?;

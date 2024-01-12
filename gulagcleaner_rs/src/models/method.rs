@@ -4,7 +4,6 @@ use lopdf::{Dictionary, Document, Object, ObjectId};
 
 use crate::{clean::Cleaner, models::page_type};
 
-/// Represents the different methods used in the Gulag Cleaner application.
 pub enum Method {
     /// The Wuolah method, which takes a vector of vectors of tuples containing unsigned integers and unsigned shorts,
     /// and a vector of unsigned integers as parameters.
@@ -16,6 +15,10 @@ pub enum Method {
     Naive,
 }
 
+/// Implements the `Cleaner` trait for the `Method` enum.
+/// This method cleans the document based on the selected method.
+/// It modifies the contents and properties of the document's pages.
+/// Returns a tuple containing the pages to delete and a status code.
 impl Cleaner for Method {
     fn clean(&mut self, doc: &mut Document) -> (Vec<u32>, u8) {
         match self {

@@ -18,6 +18,7 @@ pub trait Cleaner {
 /// # Returns
 ///
 /// A tuple containing the cleaned PDF document data as a vector of bytes and a method code.
+///
 /// The method code indicates the cleaning method used: 0 for "Wuolah", 1 for "StuDocu", and 2 for "Naive".
 pub fn clean_pdf(data: Vec<u8>, force_naive: bool) -> (Vec<u8>, u8) {
     //Load the PDF into a Document

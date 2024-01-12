@@ -20,6 +20,7 @@
     }
     ```
 */
+/// Main method execution
 pub mod clean;
 
 /// Main method rexport
@@ -27,7 +28,10 @@ pub use clean::clean_pdf;
 
 /// Modeling the different pdf sources and types
 pub mod models {
+    /// Represents the different methods used in the Gulag Cleaner application.
     pub mod method;
+
+    /// Represents the different page types used in the Gulag Cleaner application.
     pub mod page_type;
 }
 
