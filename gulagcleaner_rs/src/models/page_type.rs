@@ -1,10 +1,10 @@
 //WARNING: I need to add comments to all of the files in this folder. I will do it ASAP. I'm sorry for the inconvenience.
 
-use std::{error::Error, collections::HashSet};
+use std::{collections::HashSet, error::Error};
 
 use lopdf::{Document, ObjectId};
 
-use crate::{get_xobjs, get_images};
+use crate::clean::{get_images, get_xobjs};
 
 #[derive(Default)]
 pub enum PageType {
@@ -24,7 +24,7 @@ const HORIZONTAL_BANNER_DIMS: [(i64, i64); 7] = [
     (249, 1414),
     (217, 1240),
     (147, 1757),
-    (221, 1240)
+    (221, 1240),
 ];
 const VERTICAL_BANNER_DIMS: [(i64, i64); 8] = [
     (1753, 170),
@@ -34,7 +34,7 @@ const VERTICAL_BANNER_DIMS: [(i64, i64); 8] = [
     (1751, 171),
     (1537, 147),
     (1093, 217),
-    (1534, 150)
+    (1534, 150),
 ];
 const FULL_PAGE_DIMS: [(i64, i64); 7] = [
     (842, 595),
@@ -43,14 +43,13 @@ const FULL_PAGE_DIMS: [(i64, i64); 7] = [
     (1733, 1219),
     (3508, 2480),
     (2339, 1653),
-    (1785,2526),
+    (1785, 2526),
 ];
 
 impl PageType {
     pub fn get_page_type(doc: &Document, page: &ObjectId) -> Result<PageType, Box<dyn Error>> {
         let xobjs = get_xobjs(doc, page)?;
         let images = get_images(doc, xobjs)?;
-        println!("Images: {:?}",images);
         let has_logo = !LOGO_DIMS
             .iter()
             .collect::<HashSet<_>>()
