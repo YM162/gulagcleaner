@@ -4,7 +4,7 @@ use std::{collections::HashSet, error::Error};
 
 use lopdf::{Document, ObjectId};
 
-use crate::clean::{get_images, get_xobjs};
+use super::method::{get_images, get_xobjs};
 
 #[derive(Default)]
 pub enum PageType {

@@ -1,8 +1,17 @@
-use crate::models::{self, method::Method};
+use crate::models::{
+    self,
+    method::{find_iobj_pairs, remove_logo, Method},
+};
 use models::{method, page_type};
 
-use lopdf::{Dictionary, Document, Object, ObjectId};
-use std::{collections::HashSet, error::Error};
+use lopdf::{Document, Object};
+use std::collections::HashSet;
+
+/// Trait implemented by the different PDF methods
+pub trait Cleaner {
+    fn clean(&mut self, doc: &mut Document) -> (Vec<u32>, u8);
+}
+
 /// Cleans a PDF document by modifying its pages and removing unnecessary content.
 ///
 /// # Arguments
@@ -223,112 +232,6 @@ pub fn clean_pdf(data: Vec<u8>, force_naive: bool) -> (Vec<u8>, u8) {
     //return_stream.push(method_code);
     (return_stream, method_code)
     //doc.save_to("test.pdf").unwrap();
-}
-
-fn find_iobj_pairs(first_page: &[(u32, u16)], second_page: &[(u32, u16)]) -> (usize, usize) {
-    let unique_first_page: HashSet<&(u32, u16)> = first_page.iter().collect();
-    let unique_second_page: HashSet<&(u32, u16)> = second_page.iter().collect();
-
-    let c: Vec<&&(u32, u16)> = unique_first_page
-        .intersection(&unique_second_page)
-        .collect();
-    if c.len() != 2 {
-        return (0, 0);
-    }
-    let first_index = first_page.iter().position(|&r| r == **c[0]).unwrap();
-    let second_index = first_page.iter().position(|&r| r == **c[1]).unwrap();
-
-    if first_index < second_index {
-        (first_index, second_index)
-    } else {
-        (second_index, first_index)
-    }
-}
-
-pub fn get_xobjs<'a>(doc: &'a Document, page: &ObjectId) -> Result<&'a Dictionary, Box<dyn Error>> {
-    let resource = doc.get_page_resources(*page);
-    let resource_dict;
-    if resource.1.is_empty() {
-        resource_dict = resource.0.unwrap();
-    } else {
-        resource_dict = doc.get_object(resource.1[0])?.as_dict()?;
-    }
-
-    let xobjs = resource_dict.get(b"XObject")?.as_dict()?;
-    Ok(xobjs)
-}
-
-fn get_objdict<'a>(
-    doc: &'a Document,
-    obj: (&Vec<u8>, &Object),
-) -> Result<&'a Dictionary, Box<dyn Error>> {
-    let objdict = &doc
-        .get_object(obj.1.as_reference().unwrap())?
-        .as_stream()?
-        .dict;
-
-    Ok(objdict)
-}
-
-pub fn get_images(doc: &Document, xobjs: &Dictionary) -> Result<Vec<(i64, i64)>, Box<dyn Error>> {
-    let mut images = Vec::new();
-
-    for obj in xobjs {
-        let objectdict = get_objdict(doc, obj)?;
-
-        let subtype = objectdict.get(b"Subtype").unwrap().as_name().unwrap();
-        let sub_s = String::from_utf8_lossy(subtype);
-
-        if sub_s.starts_with("Image") {
-            images.push((
-                objectdict.get(b"Height").unwrap().as_i64().unwrap(),
-                objectdict.get(b"Width").unwrap().as_i64().unwrap(),
-            ));
-        }
-    }
-
-    Ok(images)
-}
-
-fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Error>> {
-    let xobjs = get_xobjs(doc, page)?.clone();
-    let images = get_images(doc, &xobjs)?;
-
-    let has_logo = !page_type::LOGO_DIMS
-        .iter()
-        .collect::<HashSet<_>>()
-        .intersection(&images.iter().collect::<HashSet<_>>())
-        .collect::<Vec<_>>()
-        .is_empty();
-
-    if has_logo {
-        for obj in &xobjs {
-            let objectdict = get_objdict(doc, obj)?;
-
-            let subtype = objectdict.get(b"Subtype")?.as_name()?;
-
-            let sub_s = String::from_utf8_lossy(subtype);
-            if sub_s.starts_with("Image")
-                && page_type::LOGO_DIMS.contains(&(
-                    objectdict.get(b"Height")?.as_i64()?,
-                    objectdict.get(b"Width")?.as_i64()?,
-                ))
-            {
-                let mutable_page = &mut doc
-                    .get_object_mut(obj.1.as_reference()?)?
-                    .as_stream_mut()?
-                    .dict;
-                mutable_page.set(*b"Height", 0);
-            }
-            {}
-        }
-    }
-
-    Ok(())
-}
-
-pub trait Cleaner {
-    fn clean(&self) -> (Vec<u32>, u8);
 }
 
 /// Creates a new `Method` instance based on the provided `Document` and `force_naive` flag.
