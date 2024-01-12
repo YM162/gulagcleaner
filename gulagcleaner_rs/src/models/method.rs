@@ -240,36 +240,39 @@ pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Er
     let xobjs = get_xobjs(doc, page)?.clone();
     let images = get_images(doc, &xobjs)?;
 
-    let has_logo = !page_type::LOGO_DIMS
+    // let has_logo = !page_type::LOGO_DIMS
+    //     .iter()
+    //     .collect::<HashSet<_>>()
+    //     .intersection(&images.iter().collect::<HashSet<_>>())
+    //     .collect::<Vec<_>>()
+    //     .is_empty();
+
+    let has_logo = images
         .iter()
-        .collect::<HashSet<_>>()
-        .intersection(&images.iter().collect::<HashSet<_>>())
-        .collect::<Vec<_>>()
-        .is_empty();
+        .any(|image| page_type::LOGO_DIMS.contains(image));
 
-    if has_logo {
-        for obj in &xobjs {
-            let objectdict = get_objdict(doc, obj)?;
+    if !has_logo {
+        return Ok(());
+    }
+    for obj in &xobjs {
+        let objectdict = get_objdict(doc, obj)?;
 
-            let subtype = objectdict.get(b"Subtype")?.as_name()?;
+        let subtype = objectdict.get(b"Subtype")?.as_name()?;
 
-            let sub_s = String::from_utf8_lossy(subtype);
-            if sub_s.starts_with("Image")
-                && page_type::LOGO_DIMS.contains(&(
-                    objectdict.get(b"Height")?.as_i64()?,
-                    objectdict.get(b"Width")?.as_i64()?,
-                ))
-            {
-                let mutable_page = &mut doc
-                    .get_object_mut(obj.1.as_reference()?)?
-                    .as_stream_mut()?
-                    .dict;
-                mutable_page.set(*b"Height", 0);
-            }
-            {}
+        let sub_s = String::from_utf8_lossy(subtype);
+        if sub_s.starts_with("Image")
+            && page_type::LOGO_DIMS.contains(&(
+                objectdict.get(b"Height")?.as_i64()?,
+                objectdict.get(b"Width")?.as_i64()?,
+            ))
+        {
+            let mutable_page = &mut doc
+                .get_object_mut(obj.1.as_reference()?)?
+                .as_stream_mut()?
+                .dict;
+            mutable_page.set(*b"Height", 0);
         }
     }
-
     Ok(())
 }
 
