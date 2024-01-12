@@ -27,5 +27,5 @@ jobs:
       - name: Run clippy
         working-directory: ./gulagcleaner_rs
         run: |
-          clippy --verbose --all-targets --all-features -- -D warnings
-          test --verbose --all-features
+          cargo clippy --verbose --all-targets --all-features -- -D warnings
+          cargo test --verbose --all-features
