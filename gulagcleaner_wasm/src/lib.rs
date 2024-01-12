@@ -1,7 +1,6 @@
-use wasm_bindgen::prelude::*;
 use gulagcleaner_rs;
-use serde::{Serialize, Deserialize};
-
+use serde::{Deserialize, Serialize};
+use wasm_bindgen::prelude::*;
 
 #[derive(Serialize, Deserialize)]
 pub struct CleaningResult {
@@ -10,8 +9,8 @@ pub struct CleaningResult {
 }
 
 #[wasm_bindgen]
-pub fn clean_pdf(data: Vec<u8>,force_naive: u8) -> Vec<u8> {
-    let (clean_pdf,method_code) = gulagcleaner_rs::clean_pdf(data, force_naive);
+pub fn clean_pdf(data: Vec<u8>, force_naive: bool) -> Vec<u8> {
+    let (clean_pdf, _) = gulagcleaner_rs::clean_pdf(data, force_naive);
     // For some reason, the serde serialization messes up our data, so we just return the raw bytes until we find a fix
     // let example = CleaningResult {
     //     result: clean_pdf,
