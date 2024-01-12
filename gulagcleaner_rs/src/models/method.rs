@@ -119,7 +119,7 @@ impl Cleaner for Method {
 
                 for page in &pages {
                     let page_type =
-                        page_type::PageType::get_page_type(&doc, page.1).unwrap_or_default();
+                        page_type::PageType::get_page_type(doc, page.1).unwrap_or_default();
                     let mutable_page = doc.get_object_mut(*page.1).unwrap().as_dict_mut().unwrap();
 
                     let mediabox = mutable_page.get(b"MediaBox").unwrap().as_array().unwrap();
@@ -290,12 +290,11 @@ fn get_objdict<'a>(
 
 pub fn get_xobjs<'a>(doc: &'a Document, page: &ObjectId) -> Result<&'a Dictionary, Box<dyn Error>> {
     let resource = doc.get_page_resources(*page);
-    let resource_dict;
-    if resource.1.is_empty() {
-        resource_dict = resource.0.unwrap();
+    let resource_dict: &Dictionary = if resource.1.is_empty() {
+        resource.0.unwrap()
     } else {
-        resource_dict = doc.get_object(resource.1[0])?.as_dict()?;
-    }
+        doc.get_object(resource.1[0])?.as_dict()?
+    };
 
     let xobjs = resource_dict.get(b"XObject")?.as_dict()?;
     Ok(xobjs)

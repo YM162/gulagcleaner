@@ -74,11 +74,7 @@ fn match_method(doc: &Document, force_naive: bool) -> Method {
         .filter(|x| {
             let contents = doc.get_page_contents(*x.1);
 
-            if contents.len() == 1 {
-                return true;
-            } else {
-                return false;
-            }
+            contents.len() == 1
         })
         .map(|x| *x.0)
         .collect();
