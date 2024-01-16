@@ -116,7 +116,6 @@ impl Cleaner for Method {
                 println!("Using naive method");
                 let mut to_delete = Vec::new();
                 let pages = doc.get_pages();
-
                 for page in &pages {
                     let page_type =
                         page_type::PageType::get_page_type(doc, page.1).unwrap_or_default();
@@ -295,8 +294,11 @@ pub fn get_xobjs<'a>(doc: &'a Document, page: &ObjectId) -> Result<&'a Dictionar
     } else {
         doc.get_object(resource.1[0])?.as_dict()?
     };
-
-    let xobjs = resource_dict.get(b"XObject")?.as_dict()?;
+    let xobjs = match resource_dict.get(b"XObject")? {
+        Object::Dictionary(x) => x,
+        Object::Reference(x) => doc.get_object(*x)?.as_dict()?,
+        _ => return Err("Error".into()),
+    };
     Ok(xobjs)
 }
 
