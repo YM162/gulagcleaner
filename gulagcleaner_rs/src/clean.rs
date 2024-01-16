@@ -21,6 +21,9 @@ pub trait Cleaner {
 ///
 /// The method code indicates the cleaning method used: 0 for "Wuolah", 1 for "StuDocu", and 2 for "Naive".
 pub fn clean_pdf(data: Vec<u8>, force_naive: bool) -> (Vec<u8>, u8) {
+    //WARNING: FOR THIS RELASE (0.12.0) THE WUOLAH METHOD IS BROKEN.
+    //I´m working on fixing it, but for now it will be disabled.
+
     //Load the PDF into a Document
     let mut doc = Document::load_mem(&data).unwrap();
 
@@ -99,7 +102,9 @@ fn match_method(doc: &Document, force_naive: bool) -> Method {
             .len()
             > 1
     {
-        return Method::Wuolah(content_list, to_delete);
+        //return Method::Wuolah(content_list, to_delete);
+        //SEE COMMENT AT THE TOP OF THE FUNCTION
+        return Method::Naive;
     }
     Method::Naive
 }
