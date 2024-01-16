@@ -71,8 +71,8 @@ fn match_method(doc: &Document, force_naive: bool) -> Method {
         .map(|x| doc.get_page_contents(*x.1))
         .filter(|x| x.len() > 1)
         .collect();
-
-    let to_delete: Vec<u32> = pages
+    //let to_delete: Vec<u32> = pages
+    let _: Vec<u32> = pages
         .iter()
         .filter(|x| {
             let contents = doc.get_page_contents(*x.1);
