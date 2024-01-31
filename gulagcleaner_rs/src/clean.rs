@@ -71,13 +71,12 @@ fn match_method(doc: &Document, force_naive: bool) -> Method {
         .map(|x| doc.get_page_contents(*x.1))
         .filter(|x| x.len() > 1)
         .collect();
-    //let to_delete: Vec<u32> = pages
-    let _: Vec<u32> = pages
+    let to_delete: Vec<u32> = pages
         .iter()
         .filter(|x| {
             let contents = doc.get_page_contents(*x.1);
 
-            contents.len() == 1
+            contents.len() < 4
         })
         .map(|x| *x.0)
         .collect();
@@ -88,23 +87,26 @@ fn match_method(doc: &Document, force_naive: bool) -> Method {
         .filter(|x| *x == 3)
         .collect::<Vec<_>>()
         .len()
-        > 1
+        == pages.len()
     {
         return Method::StuDocu(content_list);
     }
+    let long_content_list: Vec<Vec<(u32, u16)>> = pages
+        .iter()
+        .map(|x| doc.get_page_contents(*x.1))
+        .filter(|x| x.len() > 3)
+        .collect();
 
-    if content_list.len() > 1
-        && content_list[0]
+    if long_content_list.len() > 1
+        && long_content_list[0]
             .iter()
             .collect::<HashSet<_>>()
-            .intersection(&content_list[1].iter().collect::<HashSet<_>>())
+            .intersection(&long_content_list[1].iter().collect::<HashSet<_>>())
             .collect::<Vec<_>>()
             .len()
             > 1
     {
-        //return Method::Wuolah(content_list, to_delete);
-        //SEE COMMENT AT THE TOP OF THE FUNCTION
-        return Method::Naive;
+        return Method::Wuolah(long_content_list, to_delete);
     }
     Method::Naive
 }

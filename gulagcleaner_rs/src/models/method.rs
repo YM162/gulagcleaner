@@ -46,7 +46,7 @@ impl Cleaner for Method {
 
                 let vector: Vec<(&u32, &(u32, u16))> = pages
                     .iter()
-                    .filter(|x| doc.get_page_contents(*x.1).len() > 1)
+                    .filter(|x| doc.get_page_contents(*x.1).len() > 3)
                     .collect();
                 for (i, page) in vector.iter().enumerate() {
                     let mutable_page = doc.get_object_mut(*page.1).unwrap().as_dict_mut().unwrap();
