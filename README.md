@@ -72,8 +72,5 @@ We're always looking for ways to improve Gulag Cleaner, and we welcome contribut
 
 If you want to help, these are the top priorities right now:
 
-- Write tests for the package.
-- Add README.md (With code examples) for the rust and JS distributions.
-- Add comments to a lot of the rust code.
-- Optimize the rust code for performance improvements.
-- Add a new "clean_pdf_bytes()" function in python that does not require a file path, just the bytes.
+- Find a way to sending the method code to JS in the WASM implementation. Serialization using Serde seems to fail for some reason.
+- Add a README.md (With code examples) for the JS (wasm) distribution.

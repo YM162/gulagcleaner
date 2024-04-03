@@ -1,8 +1,8 @@
 [package]
 name = "gulagcleaner_wasm"
-version = "0.12.2"
+version = "0.13.0"
 edition = "2021"
-authors = ["YM162 <david.fontaneda16@gmail.com>"]
+authors = ["YM162 <david.fontaneda@YM162.dev>"]
 description = "Ad removal tool for PDFs."
 readme = "../README.md"
 homepage = "https://github.com/YM162/gulag-cleaner-cli"
