@@ -1,11 +1,8 @@
-
 # Gulag Cleaner
-
 
 [![Twitter](https://a11ybadges.com/badge?logo=twitter)](https://twitter.com/gulagcleaner)
 [![Instagram](https://a11ybadges.com/badge?logo=instagram)](https://www.instagram.com/gulagcleaner/)
 [![Ko-fi](https://a11ybadges.com/badge?logo=kofi)](https://ko-fi.com/L3L86VEX9)
-
 
 Gulag Cleaner is a tool designed to remove advertisements from PDFs, making it easier to read and navigate documents without being disrupted by unwanted ads.
 
@@ -22,6 +19,7 @@ This tool can be used without installation directly from [our website](https://g
 # Installation
 
 To install Gulag Cleaner, please [download](https://www.python.org/downloads/) and [install](https://wiki.python.org/moin/BeginnersGuide/Download) Python and then run the following command in your terminal:
+
 ```
 pip install gulagcleaner
 ```
@@ -42,11 +40,11 @@ gulagcleaner [-r] [-s] [-n] [-h] [-v] <filename>...
 
 Gulag Cleaner provides several options for its usage:
 
-> * '-r': Replace the original file with the cleaned version.
-> * '-s': Do not show metadata about cleaned files.
-> * '-n': Force the naive cleaning method.
-> * '-h': Display the help message, providing information on how to use Gulag Cleaner.
-> * '-v': Display the current version of Gulag Cleaner.
+> - '-r': Replace the original file with the cleaned version.
+> - '-s': Do not show metadata about cleaned files.
+> - '-n': Force the naive cleaning method.
+> - '-h': Display the help message, providing information on how to use Gulag Cleaner.
+> - '-v': Display the current version of Gulag Cleaner.
 
 ## Code
 
@@ -58,17 +56,24 @@ from gulagcleaner.clean import clean_pdf_path
 return_msg = clean_pdf_path("input.pdf","output.pdf")
 ```
 
+## Rust Distribution
+
+If you are willing to use the Rust distribution of Gulag Cleaner, you can find the instructions in the [Rust distribution README.md](gulagcleaner_rs/README.md) file.
+
 # License
+
 Gulag Cleaner is distributed under the GPL-3 license, which means it's open-source and free to use.
 
 # Contributing
+
 We're always looking for ways to improve Gulag Cleaner, and we welcome contributions from the community. If you have ideas for improvements or bug fixes, please feel free to submit a pull request.
 
 ## TODO
+
 If you want to help, these are the top priorities right now:
 
-* Write tests for the package.
-* Add README.md (With code examples) for the rust and JS distributions.
-* Add comments to a lot of the rust code.
-* Optimize the rust code for performance improvements.
-* Add a new "clean_pdf_bytes()" function in python that does not require a file path, just the bytes.
+- Write tests for the package.
+- Add README.md (With code examples) for the rust and JS distributions.
+- Add comments to a lot of the rust code.
+- Optimize the rust code for performance improvements.
+- Add a new "clean_pdf_bytes()" function in python that does not require a file path, just the bytes.
