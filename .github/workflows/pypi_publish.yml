@@ -15,7 +15,6 @@ jobs:
         - macos
         - windows
         python-version:
-        - '8'
         - '9'
         - '10'
         - '11'
@@ -33,7 +32,7 @@ jobs:
     - name: set up python
       uses: actions/setup-python@v1
       with:
-        python-version: '3.8'
+        python-version: '3.9'
 
     - name: set up rust
       if: matrix.os != 'ubuntu'
