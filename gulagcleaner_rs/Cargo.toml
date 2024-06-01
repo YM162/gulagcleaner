@@ -1,6 +1,6 @@
 [package]
 name = "gulagcleaner_rs"
-version = "0.14.0"
+version = "0.14.1"
 edition = "2021"
 authors = ["YM162 <david.fontaneda@YM162.dev>"]
 description = "Ad removal tool for PDFs."
