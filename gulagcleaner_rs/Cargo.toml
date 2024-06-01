@@ -9,6 +9,7 @@ homepage = "https://github.com/YM162/gulag-cleaner-cli"
 repository = "https://github.com/YM162/gulag-cleaner-cli.git"
 license = "GPL-3.0"
 keywords = ["wuolah", "studocu", "pdf", "stucleaner", "gulagcleaner"]
+exclude=["example_docs/"]
 
 [lib]
 name = "gulagcleaner_rs"
