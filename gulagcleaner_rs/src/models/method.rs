@@ -222,6 +222,15 @@ pub fn find_iobj_pairs(first_page: &[(u32, u16)], second_page: &[(u32, u16)]) ->
     let c: Vec<&&(u32, u16)> = unique_first_page
         .intersection(&unique_second_page)
         .collect();
+    if c.len() == 3 {
+        //We return the first two in the order they appear in the first page
+        let first_index = first_page.iter().position(|&r| r == **c[0]).unwrap();
+        let second_index = first_page.iter().position(|&r| r == **c[1]).unwrap();
+        let third_index = first_page.iter().position(|&r| r == **c[2]).unwrap();
+        let mut indexes = [first_index, second_index, third_index];
+        indexes.sort();
+        return (indexes[0], indexes[1]);
+    }
     if c.len() != 2 {
         return (0, 0);
     }
