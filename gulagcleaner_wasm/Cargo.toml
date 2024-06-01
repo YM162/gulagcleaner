@@ -1,6 +1,6 @@
 [package]
 name = "gulagcleaner_wasm"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2021"
 authors = ["YM162 <david.fontaneda@YM162.dev>"]
 description = "Ad removal tool for PDFs."
