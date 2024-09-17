@@ -35,7 +35,6 @@ impl Cleaner for Method {
                                 let check_again_if_00 = find_iobj_pairs(x, &content_list[i - 1]);
                                 if check_again_if_00 == (0, 0) {
                                     (0, 0)
-                                    //TODO COME BACK HERE
                                 } else {
                                     check_again_if_00
                                 }
