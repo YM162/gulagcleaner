@@ -124,6 +124,7 @@ impl Cleaner for Method {
                 for page in &pages {
                     let page_type =
                         page_type::PageType::get_page_type(doc, page.1).unwrap_or_default();
+                        println!("{:?}", page_type);
                     let mutable_page = doc.get_object_mut(*page.1).unwrap().as_dict_mut().unwrap();
 
                     let mediabox = mutable_page.get(b"MediaBox").unwrap().as_array().unwrap();
@@ -245,7 +246,7 @@ pub fn find_iobj_pairs(first_page: &[(u32, u16)], second_page: &[(u32, u16)]) ->
     if len < 2 {
         return (0, 0);
     }
-    
+
     (indexes[len - 3], indexes[len - 2])
 }
 

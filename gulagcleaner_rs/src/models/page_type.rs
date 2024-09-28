@@ -5,6 +5,7 @@ use lopdf::{Document, ObjectId};
 use super::method::{get_images, get_xobjs};
 
 #[derive(Default)]
+#[derive(Debug)]
 /// Represents the different methods used in the Gulag Cleaner application.
 pub enum PageType {
     BannerAds,
@@ -14,9 +15,9 @@ pub enum PageType {
     Idk,
 }
 
-pub const LOGO_DIMS: [(i64, i64); 3] = [(71, 390), (37, 203), (73, 390)];
+pub const LOGO_DIMS: [(i64, i64); 6] = [(71, 390), (37, 203), (73, 390),(23,130),(19,109),(72,391)];
 
-const HORIZONTAL_BANNER_DIMS: [(i64, i64); 7] = [
+const HORIZONTAL_BANNER_DIMS: [(i64, i64); 9] = [
     (247, 1414),
     (213, 1219),
     (215, 1219),
@@ -24,8 +25,10 @@ const HORIZONTAL_BANNER_DIMS: [(i64, i64); 7] = [
     (217, 1240),
     (147, 1757),
     (221, 1240),
+    (136, 780),
+    (218,1241)
 ];
-const VERTICAL_BANNER_DIMS: [(i64, i64); 8] = [
+const VERTICAL_BANNER_DIMS: [(i64, i64); 10] = [
     (1753, 170),
     (1518, 248),
     (1520, 147),
@@ -34,8 +37,10 @@ const VERTICAL_BANNER_DIMS: [(i64, i64); 8] = [
     (1537, 147),
     (1093, 217),
     (1534, 150),
+    (970, 92),
+    (1538, 148)
 ];
-const FULL_PAGE_DIMS: [(i64, i64); 7] = [
+const FULL_PAGE_DIMS: [(i64, i64); 9] = [
     (842, 595),
     (1754, 1240),
     (2526, 1785),
@@ -43,6 +48,8 @@ const FULL_PAGE_DIMS: [(i64, i64); 7] = [
     (3508, 2480),
     (2339, 1653),
     (1785, 2526),
+    (1109, 782),
+    (1759,1241)
 ];
 
 impl PageType {
@@ -64,6 +71,7 @@ impl PageType {
     pub fn get_page_type(doc: &Document, page: &ObjectId) -> Result<PageType, Box<dyn Error>> {
         let xobjs = get_xobjs(doc, page)?;
         let images = get_images(doc, xobjs)?;
+        println!("{:?}", images);
         let has_logo = !LOGO_DIMS
             .iter()
             .collect::<HashSet<_>>()
