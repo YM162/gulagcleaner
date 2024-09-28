@@ -229,58 +229,24 @@ pub fn find_iobj_pairs(first_page: &[(u32, u16)], second_page: &[(u32, u16)]) ->
         .collect();
     println!("{:?}", c);
 
-    if c.len() == 3 {
-        //We return the first two in the order they appear in the first page
-        let first_index = first_page.iter().position(|&r| r == **c[0]).unwrap();
-        let second_index = first_page.iter().position(|&r| r == **c[1]).unwrap();
-        let third_index = first_page.iter().position(|&r| r == **c[2]).unwrap();
-        let mut indexes = [first_index, second_index, third_index];
-        indexes.sort();
+    //It seems like the indexes are always c.len() - 3 and c.len() - 2, except for the len == 2 case.
+
+    let mut indexes: Vec<usize> = c
+        .iter()
+        .map(|&&element| first_page.iter().position(|&r| r == *element).unwrap())
+        .collect();
+    
+    indexes.sort();
+
+    let len = indexes.len();
+    if len == 2 {
         return (indexes[0], indexes[1]);
     }
-
-    if c.len() == 5 {
-        //We return the third and fourth in the order they appear in the first page
-        let first_index = first_page.iter().position(|&r| r == **c[0]).unwrap();
-        let second_index = first_page.iter().position(|&r| r == **c[1]).unwrap();
-        let third_index = first_page.iter().position(|&r| r == **c[2]).unwrap();
-        let fourth_index = first_page.iter().position(|&r| r == **c[3]).unwrap();
-        let fifth_index = first_page.iter().position(|&r| r == **c[4]).unwrap();
-        let mut indexes = [first_index, second_index, third_index, fourth_index, fifth_index];
-        indexes.sort();
-        return (indexes[2], indexes[3]);
-    }
-
-    if c.len() == 9 {
-        //We return the seventh and eighth in the order they appear in the first page
-        let first_index = first_page.iter().position(|&r| r == **c[0]).unwrap();
-        let second_index = first_page.iter().position(|&r| r == **c[1]).unwrap();
-        let third_index = first_page.iter().position(|&r| r == **c[2]).unwrap();
-        let fourth_index = first_page.iter().position(|&r| r == **c[3]).unwrap();
-        let fifth_index = first_page.iter().position(|&r| r == **c[4]).unwrap();
-        let sixth_index = first_page.iter().position(|&r| r == **c[5]).unwrap();
-        let seventh_index = first_page.iter().position(|&r| r == **c[6]).unwrap();
-        let eighth_index = first_page.iter().position(|&r| r == **c[7]).unwrap();
-        let ninth_index = first_page.iter().position(|&r| r == **c[8]).unwrap();
-        let mut indexes = [
-            first_index, second_index, third_index, fourth_index, fifth_index, sixth_index,
-            seventh_index, eighth_index, ninth_index,
-        ];
-        indexes.sort();
-        return (indexes[6], indexes[7]);
-    }
-
-    if c.len() != 2 {
+    if len < 2 {
         return (0, 0);
     }
-    let first_index = first_page.iter().position(|&r| r == **c[0]).unwrap();
-    let second_index = first_page.iter().position(|&r| r == **c[1]).unwrap();
-
-    if first_index < second_index {
-        (first_index, second_index)
-    } else {
-        (second_index, first_index)
-    }
+    
+    (indexes[len - 3], indexes[len - 2])
 }
 
 pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Error>> {
