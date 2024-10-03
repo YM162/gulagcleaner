@@ -277,7 +277,7 @@ pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Er
                 continue;
             }
 
-            if  (image.1 as f64 / image.0 as f64) > 5 as f64 &&  (image.1 as f64) / (image.0 as f64) < 6 as f64 {
+            if  (image.1 as f64 / image.0 as f64) > 5_f64 &&  (image.1 as f64) / (image.0 as f64) < 6_f64 {
                 repeated_logo_dims = image;
                 has_logo = true;
                 break;
@@ -301,7 +301,7 @@ pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Er
             && (page_type::LOGO_DIMS.contains(&(
                 objectdict.get(b"Height")?.as_i64()?,
                 objectdict.get(b"Width")?.as_i64()?,
-            )) || &repeated_logo_dims == &(
+            )) || repeated_logo_dims == (
                 objectdict.get(b"Height")?.as_i64()?,
                 objectdict.get(b"Width")?.as_i64()?,
             )

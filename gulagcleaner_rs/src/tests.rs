@@ -30,7 +30,7 @@ fn create_output_directory() {
 fn read_and_clean_pdf(in_path: &str) -> Result<Vec<u8>, String> {
     let data =
         std::fs::read(in_path).map_err(|e| format!("Failed to read `{}`: {}", in_path, e))?;
-    let (clean_file, _) = clean_pdf(data, true);
+    let (clean_file, _) = clean_pdf(data, false);
     Ok(clean_file)
 }
 
