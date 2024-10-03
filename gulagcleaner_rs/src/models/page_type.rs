@@ -15,7 +15,7 @@ pub enum PageType {
     Idk,
 }
 
-pub const LOGO_DIMS: [(i64, i64); 8] = [(71, 390), (37, 203), (73, 390),(23,130),(24,130),(19,109),(20,109),(72,391)];
+pub const LOGO_DIMS: [(i64, i64); 9] = [(71, 390), (37, 203), (73, 390),(23,130),(24,130),(19,109),(20,109),(72,391),(24,129)];
 
 const HORIZONTAL_BANNER_DIMS: [(i64, i64); 10] = [
     (247, 1414),
@@ -75,12 +75,12 @@ impl PageType {
         let xobjs = get_xobjs(doc, page)?;
         let images = get_images(doc, xobjs)?;
         println!("{:?}", images);
-        let has_logo = !LOGO_DIMS
-            .iter()
-            .collect::<HashSet<_>>()
-            .intersection(&images.iter().collect::<HashSet<_>>())
-            .collect::<Vec<_>>()
-            .is_empty();
+        // let has_logo = !LOGO_DIMS
+        //     .iter()
+        //     .collect::<HashSet<_>>()
+        //     .intersection(&images.iter().collect::<HashSet<_>>())
+        //     .collect::<Vec<_>>()
+        //     .is_empty();
 
         let has_horizontal_banner = !HORIZONTAL_BANNER_DIMS
             .iter()
@@ -107,10 +107,31 @@ impl PageType {
             Ok(PageType::BannerAds)
         } else if has_full_page {
             Ok(PageType::FullPageAds)
-        } else if has_logo {
-            Ok(PageType::Watermark)
         } else {
+            let annots = doc.get_page_annotations(*page)?;
+            let wuolah_annot =  annots.iter().filter(is_annots_wuolah).filter( |x| x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Integer(0) || x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Real(0.0));
+            let wuolah_annot_count = wuolah_annot.count();
+            println!("{:?}", wuolah_annot_count);
+            if wuolah_annot_count == 1 {
+                return Ok(PageType::Watermark);
+            } else if wuolah_annot_count == 2 {
+                return Ok(PageType::BannerAds);
+            }
             Ok(PageType::Idk)
         }
+    }
+}
+
+fn is_annots_wuolah(annot: &&&lopdf::Dictionary) -> bool {
+    match annot.get(b"A") {
+        Ok(x) => {
+            match x.as_dict().unwrap().get(b"URI") {
+                Ok(y) => {
+                    y.as_string().unwrap().contains("wlh.es")
+                },
+                Err(_) => false,
+            }
+        },
+        Err(_) => false,
     }
 }

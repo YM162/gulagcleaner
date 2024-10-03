@@ -30,7 +30,7 @@ fn create_output_directory() {
 fn read_and_clean_pdf(in_path: &str) -> Result<Vec<u8>, String> {
     let data =
         std::fs::read(in_path).map_err(|e| format!("Failed to read `{}`: {}", in_path, e))?;
-    let (clean_file, _) = clean_pdf(data, false);
+    let (clean_file, _) = clean_pdf(data, true);
     Ok(clean_file)
 }
 
@@ -126,6 +126,30 @@ fn test_300924_wuolah_pdf() {
     run_test_for_config(&TestConfig {
         input_path: "example_docs/wuolah-300924-example.pdf",
         output_filename: "wuolah-300924-example_clean.pdf",
+    });
+}
+
+#[test]
+fn test_300924_2_wuolah_pdf() {
+    run_test_for_config(&TestConfig {
+        input_path: "example_docs/wuolah-300924-2-example.pdf",
+        output_filename: "wuolah-300924-2-example_clean.pdf",
+    });
+}
+
+#[test]
+fn test_031024_wuolah_pdf() {
+    run_test_for_config(&TestConfig {
+        input_path: "example_docs/wuolah-031024-example.pdf",
+        output_filename: "wuolah-031024-example_clean.pdf",
+    });
+}
+
+#[test]
+fn test_031024_2_wuolah_pdf() {
+    run_test_for_config(&TestConfig {
+        input_path: "example_docs/wuolah-031024-2-example.pdf",
+        output_filename: "wuolah-031024-2-example_clean.pdf",
     });
 }
 

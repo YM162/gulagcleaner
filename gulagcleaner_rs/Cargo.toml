@@ -16,4 +16,4 @@ name = "gulagcleaner_rs"
 
 [dependencies]
 flate2 = "1.0.27"
-lopdf = "0.32.0"
+lopdf = "0.34.0"

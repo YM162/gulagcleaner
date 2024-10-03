@@ -1,9 +1,10 @@
-use std::{collections::HashSet, error::Error};
+use std::{collections::HashSet, error::Error, vec};
 
 use lopdf::{Dictionary, Document, Object, ObjectId};
 
 use crate::{clean::Cleaner, models::page_type};
 
+#[derive(Debug)]
 pub enum Method {
     /// The Wuolah method, which takes a vector of vectors of tuples containing unsigned integers and unsigned shorts,
     /// and a vector of unsigned integers as parameters.
@@ -21,6 +22,7 @@ pub enum Method {
 /// Returns a tuple containing the pages to delete and a status code.
 impl Cleaner for Method {
     fn clean(&mut self, doc: &mut Document) -> (Vec<u32>, u8) {
+        println!("Cleaning with method: {:?}", self);
         match self {
             Method::Wuolah(content_list, to_delete) => {
                 let new_contents: Vec<Vec<(u32, u16)>> = content_list
@@ -261,9 +263,30 @@ pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Er
     //     .collect::<Vec<_>>()
     //     .is_empty();
 
-    let has_logo = images
+    let mut has_logo = images
         .iter()
         .any(|image| page_type::LOGO_DIMS.contains(image));
+    
+    //See if there are two images with the same dimensions
+    let mut image_dims = HashSet::new();
+    let mut repeated_logo_dims = (0, 0);
+    for image in images {
+        if !image_dims.insert(image) {
+
+            if image.1 == 0 || image.0 == 0 {
+                continue;
+            }
+
+            if  (image.1 as f64 / image.0 as f64) > 5 as f64 &&  (image.1 as f64) / (image.0 as f64) < 6 as f64 {
+                repeated_logo_dims = image;
+                has_logo = true;
+                break;
+            }
+        }
+    }
+
+    println!("{:?}", repeated_logo_dims);
+
 
     if !has_logo {
         return Ok(());
@@ -275,10 +298,14 @@ pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Er
 
         let sub_s = String::from_utf8_lossy(subtype);
         if sub_s.starts_with("Image")
-            && page_type::LOGO_DIMS.contains(&(
+            && (page_type::LOGO_DIMS.contains(&(
                 objectdict.get(b"Height")?.as_i64()?,
                 objectdict.get(b"Width")?.as_i64()?,
-            ))
+            )) || &repeated_logo_dims == &(
+                objectdict.get(b"Height")?.as_i64()?,
+                objectdict.get(b"Width")?.as_i64()?,
+            )
+        )
         {
             let mutable_page = &mut doc
                 .get_object_mut(obj.1.as_reference()?)?
@@ -303,7 +330,7 @@ fn get_objdict<'a>(
 }
 
 pub fn get_xobjs<'a>(doc: &'a Document, page: &ObjectId) -> Result<&'a Dictionary, Box<dyn Error>> {
-    let resource = doc.get_page_resources(*page);
+    let resource = doc.get_page_resources(*page)?;
     let resource_dict: &Dictionary = if resource.1.is_empty() {
         resource.0.unwrap()
     } else {
