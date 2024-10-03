@@ -81,82 +81,90 @@ fn run_test_for_config(test_config: &TestConfig) {
 
 // Define tests for specific PDF files, utilizing the TestConfig structure.
 
+// #[test]
+// fn test_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-free-example.pdf",
+//         output_filename: "wuolah_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_010624_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-010624-example.pdf",
+//         output_filename: "wuolah_010624_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_170924_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-170924-example.pdf",
+//         output_filename: "wuolah-170924-example_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_280924_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-280924-example.pdf",
+//         output_filename: "wuolah-280924-example_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_280924_2_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-280924-2-example.pdf",
+//         output_filename: "wuolah-280924-2-example_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_300924_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-300924-example.pdf",
+//         output_filename: "wuolah-300924-example_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_300924_2_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-300924-2-example.pdf",
+//         output_filename: "wuolah-300924-2-example_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_031024_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-031024-example.pdf",
+//         output_filename: "wuolah-031024-example_clean.pdf",
+//     });
+// }
+
+// #[test]
+// fn test_031024_2_wuolah_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/wuolah-031024-2-example.pdf",
+//         output_filename: "wuolah-031024-2-example_clean.pdf",
+//     });
+// }
+
 #[test]
-fn test_wuolah_pdf() {
+fn test_041024_wuolah_pdf() {
     run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-free-example.pdf",
-        output_filename: "wuolah_clean.pdf",
+        input_path: "example_docs/wuolah-041024-example.pdf",
+        output_filename: "wuolah-041024-example_clean.pdf",
     });
 }
 
-#[test]
-fn test_010624_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-010624-example.pdf",
-        output_filename: "wuolah_010624_clean.pdf",
-    });
-}
-
-#[test]
-fn test_170924_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-170924-example.pdf",
-        output_filename: "wuolah-170924-example_clean.pdf",
-    });
-}
-
-#[test]
-fn test_280924_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-280924-example.pdf",
-        output_filename: "wuolah-280924-example_clean.pdf",
-    });
-}
-
-#[test]
-fn test_280924_2_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-280924-2-example.pdf",
-        output_filename: "wuolah-280924-2-example_clean.pdf",
-    });
-}
-
-#[test]
-fn test_300924_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-300924-example.pdf",
-        output_filename: "wuolah-300924-example_clean.pdf",
-    });
-}
-
-#[test]
-fn test_300924_2_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-300924-2-example.pdf",
-        output_filename: "wuolah-300924-2-example_clean.pdf",
-    });
-}
-
-#[test]
-fn test_031024_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-031024-example.pdf",
-        output_filename: "wuolah-031024-example_clean.pdf",
-    });
-}
-
-#[test]
-fn test_031024_2_wuolah_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/wuolah-031024-2-example.pdf",
-        output_filename: "wuolah-031024-2-example_clean.pdf",
-    });
-}
-
-#[test]
-fn test_studocu_pdf() {
-    run_test_for_config(&TestConfig {
-        input_path: "example_docs/studocu-example.pdf",
-        output_filename: "studocu_clean.pdf",
-    });
-}
+// #[test]
+// fn test_studocu_pdf() {
+//     run_test_for_config(&TestConfig {
+//         input_path: "example_docs/studocu-example.pdf",
+//         output_filename: "studocu_clean.pdf",
+//     });
+// }

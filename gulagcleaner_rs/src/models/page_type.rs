@@ -109,9 +109,11 @@ impl PageType {
             Ok(PageType::FullPageAds)
         } else {
             let annots = doc.get_page_annotations(*page)?;
-            let wuolah_annot =  annots.iter().filter(is_annots_wuolah).filter( |x| x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Integer(0) || x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Real(0.0));
+            
+            let wuolah_annot =  annots.iter().filter(|x| is_annots_wuolah(x,doc)).filter( |x| x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Integer(0) || x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Real(0.0));
+   
             let wuolah_annot_count = wuolah_annot.count();
-            println!("{:?}", wuolah_annot_count);
+
             if wuolah_annot_count == 1 {
                 return Ok(PageType::Watermark);
             } else if wuolah_annot_count == 2 {
@@ -122,12 +124,12 @@ impl PageType {
     }
 }
 
-fn is_annots_wuolah(annot: &&&lopdf::Dictionary) -> bool {
+fn is_annots_wuolah(annot: &&&lopdf::Dictionary, doc: &lopdf::Document) -> bool {
     match annot.get(b"A") {
         Ok(x) => {
-            match x.as_dict().unwrap().get(b"URI") {
+            match doc.dereference(x).unwrap().1.as_dict().unwrap().get(b"URI") {
                 Ok(y) => {
-                    y.as_string().unwrap().contains("wlh.es")
+                    doc.dereference(y).unwrap().1.as_string().unwrap().contains("wlh.es")
                 },
                 Err(_) => false,
             }
