@@ -129,7 +129,7 @@ fn is_annots_wuolah(annot: &&&lopdf::Dictionary, doc: &lopdf::Document) -> bool 
         Ok(x) => {
             match doc.dereference(x).unwrap().1.as_dict().unwrap().get(b"URI") {
                 Ok(y) => {
-                    doc.dereference(y).unwrap().1.as_string().unwrap().contains("wlh.es")
+                    doc.dereference(y).unwrap().1.as_string().unwrap().contains("track.wlh.es")
                 },
                 Err(_) => false,
             }
