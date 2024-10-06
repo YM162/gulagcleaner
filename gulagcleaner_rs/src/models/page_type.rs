@@ -131,9 +131,9 @@ fn is_annots_wuolah(annot: &&&lopdf::Dictionary, doc: &lopdf::Document) -> bool 
                 Ok(y) => {
                     let url = doc.dereference(y).unwrap().1.as_string().unwrap();
                     if url.contains("track.wlh.es"){
-                        return !(url.contains("apuntes"));
+                        !(url.contains("apuntes"))
                     } else {
-                        return false;
+                        false
                     }
                 },
                 Err(_) => false,
