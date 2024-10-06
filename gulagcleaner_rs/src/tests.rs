@@ -162,6 +162,14 @@ fn test_041024_wuolah_pdf() {
 }
 
 #[test]
+fn test_061024_wuolah_pdf() {
+    run_test_for_config(&TestConfig {
+        input_path: "example_docs/wuolah-061024-example.pdf",
+        output_filename: "wuolah-061024-example_clean.pdf",
+    });
+}
+
+#[test]
 fn test_studocu_pdf() {
     run_test_for_config(&TestConfig {
         input_path: "example_docs/studocu-example.pdf",
