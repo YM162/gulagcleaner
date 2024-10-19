@@ -111,13 +111,36 @@ impl PageType {
             let annots = doc.get_page_annotations(*page)?;
             
             let wuolah_annot =  annots.iter().filter(|x| is_annots_wuolah(x,doc)).filter( |x| x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Integer(0) || x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Real(0.0));
-   
-            let wuolah_annot_count = wuolah_annot.count();
-
-            if wuolah_annot_count == 1 {
-                return Ok(PageType::Watermark);
-            } else if wuolah_annot_count == 2 {
-                return Ok(PageType::BannerAds);
+            // For each wuolah annot, check if substrings are present in any of the URI
+            println!("{:?}", wuolah_annot);
+            let mut bannercounter = 0;
+            let mut hasfooter = false;
+            for annot in wuolah_annot {
+                if let Ok(action) = annot.get(b"A") {
+                    if let Ok(action_dict) = doc.dereference(action) {
+                        if let Ok(uri) = action_dict.1.as_dict().unwrap().get(b"URI") {
+                            if let Ok(url) = doc.dereference(uri) {
+                                let url_str = url.1.as_string().unwrap();
+                                if url_str.contains("adU=2") {
+                                    bannercounter += 1;
+                                }
+                                if url_str.contains("adU=3") {
+                                    hasfooter = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            println!("{}", bannercounter);
+            if bannercounter == 1 {
+                return Ok(PageType::Watermark)
+            }
+            if bannercounter == 2 {
+                return Ok(PageType::BannerAds)
+            } 
+            if hasfooter {
+                return Ok(PageType::Watermark)
             }
             Ok(PageType::Idk)
         }
