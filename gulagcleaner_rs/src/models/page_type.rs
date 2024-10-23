@@ -136,7 +136,7 @@ impl PageType {
             if bannercounter == 1 {
                 return Ok(PageType::Watermark)
             }
-            if bannercounter == 2 {
+            if bannercounter > 1 {
                 return Ok(PageType::BannerAds)
             } 
             if hasfooter {
