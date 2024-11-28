@@ -56,7 +56,6 @@ pub fn clean_pdf(data: Vec<u8>, force_naive: bool) -> (Vec<u8>, u8) {
 /// # Returns
 ///
 /// A `Method` instance representing the chosen method based on the provided `Document` and `force_naive` flag.
-
 fn match_method(doc: &Document, force_naive: bool) -> Method {
     //0 for auto, 1 for wuolah, 2 for studocu 3 for wuolah naive
     if force_naive {
