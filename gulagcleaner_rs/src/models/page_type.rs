@@ -16,7 +16,7 @@ pub enum PageType {
  
 pub const LOGO_DIMS: [(i64, i64); 9] = [(71, 390), (37, 203), (73, 390), (23, 130), (24, 130), (19, 109), (20, 109), (72, 391), (24, 129)];
  
-const HORIZONTAL_BANNER_DIMS: [(i64, i64); 12] = [
+const HORIZONTAL_BANNER_DIMS: [(i64, i64); 13] = [
     (247, 1414),
     (213, 1219),
     (215, 1219),
@@ -28,9 +28,10 @@ const HORIZONTAL_BANNER_DIMS: [(i64, i64); 12] = [
     (136, 780),
     (137,780),
     (218,1241),
-    (218,1246)
+    (218,1246),
+    (217,1094)
 ];
-const VERTICAL_BANNER_DIMS: [(i64, i64); 13] = [
+const VERTICAL_BANNER_DIMS: [(i64, i64); 14] = [
     (1753, 170),
     (1518, 248),
     (1520, 147),
@@ -43,7 +44,8 @@ const VERTICAL_BANNER_DIMS: [(i64, i64); 13] = [
     (970, 92),
     (969,93),
     (1538, 148),
-    (1538, 147)
+    (1538, 147),
+    (1769,148)
 ];
 const FULL_PAGE_DIMS: [(i64, i64); 10] = [
     (842, 595),
