@@ -94,7 +94,7 @@ impl PageType {
                     x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Integer(0)
                         || x.get(b"Rect").unwrap().as_array().unwrap()[0] == lopdf::Object::Real(0.0)
                 });
-            let mut bannercounter = 0;
+            //let mut bannercounter = 0;
             let mut hasfooter = false;
             for annot in wuolah_annot {
                 if let Ok(action) = annot.get(b"A") {
@@ -102,10 +102,10 @@ impl PageType {
                         if let Ok(uri) = action_dict.1.as_dict().unwrap().get(b"URI") {
                             if let Ok(url) = doc.dereference(uri) {
                                 let url_str = url.1.as_string().unwrap();
-                                if url_str.contains("adU=2") {
+                                /*if url_str.contains("adU=2") {
                                     bannercounter += 1;
-                                }
-                                if url_str.contains("adU=3") {
+                                }*/
+                                if url_str.contains("adU=2") {
                                     hasfooter = true;
                                 }
                             }
@@ -113,12 +113,12 @@ impl PageType {
                     }
                 }
             }
-            if bannercounter == 1 {
+            /*if bannercounter == 1 {
                 return Ok(PageType::Watermark);
             }
             if bannercounter > 1 {
                 return Ok(PageType::BannerAds);
-            }
+            }*/
             if hasfooter {
                 return Ok(PageType::Watermark);
             }
