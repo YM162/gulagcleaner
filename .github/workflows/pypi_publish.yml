@@ -4,96 +4,201 @@ on:
   release:
     types: [published]
 
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: build py3.${{ matrix.python-version }} on ${{ matrix.platform || matrix.os }}
+    name: Build py${{ matrix.python-version }} on ${{ matrix.platform }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-        - ubuntu
-        - macos
-        - windows
-        python-version:
-        - '9'
-        - '10'
-        - '11'
-        - '12'
         include:
-        - os: ubuntu
-          platform: linux
-        - os: windows
-          ls: dir
+          - os: ubuntu
+            platform: linux
+            python-version: '3.9'
+            cibw-build: 'cp39-*'
+          - os: ubuntu
+            platform: linux
+            python-version: '3.10'
+            cibw-build: 'cp310-*'
+          - os: ubuntu
+            platform: linux
+            python-version: '3.11'
+            cibw-build: 'cp311-*'
+          - os: ubuntu
+            platform: linux
+            python-version: '3.12'
+            cibw-build: 'cp312-*'
+          - os: macos
+            platform: macos
+            python-version: '3.9'
+            cibw-build: 'cp39-*'
+          - os: macos
+            platform: macos
+            python-version: '3.10'
+            cibw-build: 'cp310-*'
+          - os: macos
+            platform: macos
+            python-version: '3.11'
+            cibw-build: 'cp311-*'
+          - os: macos
+            platform: macos
+            python-version: '3.12'
+            cibw-build: 'cp312-*'
+          - os: windows
+            platform: windows
+            python-version: '3.9'
+            cibw-build: 'cp39-*'
+          - os: windows
+            platform: windows
+            python-version: '3.10'
+            cibw-build: 'cp310-*'
+          - os: windows
+            platform: windows
+            python-version: '3.11'
+            cibw-build: 'cp311-*'
+          - os: windows
+            platform: windows
+            python-version: '3.12'
+            cibw-build: 'cp312-*'
 
-    runs-on: ${{ format('{0}-latest', matrix.os) }}
+    runs-on: ${{ matrix.os }}-latest
+
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: set up python
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.9'
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
 
-    - name: set up rust
-      if: matrix.os != 'ubuntu'
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: nightly
-        override: true
+      - name: Set up Rust (non-ubuntu)
+        if: matrix.os != 'ubuntu'
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
 
-    - name: install python dependencies
-      run: pip install -U setuptools wheel twine cibuildwheel build
+      - name: Install Python build dependencies
+        run: pip install -U setuptools wheel twine cibuildwheel build
 
-    - name: build sdist
-      working-directory: gulagcleaner_python
-      if: matrix.os == 'ubuntu' && matrix.python-version == '8'
-      run: |
-        pip install -U setuptools-rust
-        python -m build . --sdist
+      - name: Build source distribution (only on ubuntu + 3.9)
+        if: matrix.os == 'ubuntu' && matrix.python-version == '3.9'
+        working-directory: gulagcleaner_python
+        run: |
+          pip install -U setuptools-rust
+          python -m build . --sdist
 
-    - name: build ${{ matrix.platform || matrix.os }} binaries
-      run: cibuildwheel gulagcleaner_python --output-dir dist
-      env:
-        CIBW_BUILD: 'cp3${{ matrix.python-version }}-*'
-        CIBW_SKIP: '*-win32 *-musllinux_i686'
-        CIBW_PLATFORM: ${{ matrix.platform || matrix.os }}
-        CIBW_ENVIRONMENT: 'PATH="$HOME/.cargo/bin:$PATH"'
-        CIBW_ENVIRONMENT_WINDOWS: 'PATH="$UserProfile\.cargo\bin;$PATH"'
-        CIBW_MANYLINUX_X86_64_IMAGE: 'manylinux2014'
-        CIBW_MANYLINUX_I686_IMAGE: 'manylinux2014'
-        CIBW_BEFORE_BUILD: >
-          pip install -U setuptools-rust &&
-          rustup default nightly &&
-          rustup show
-        CIBW_BEFORE_BUILD_LINUX: >
-          pip install -U setuptools-rust &&
-          curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=nightly --profile=minimal -y &&
-          rustup show
+      - name: Build wheels with cibuildwheel
+        run: cibuildwheel gulagcleaner_python --output-dir dist
+        env:
+          CIBW_BUILD: ${{ matrix.cibw-build }}
+          CIBW_SKIP: "*-win32 *-musllinux_i686"
+          CIBW_PLATFORM: ${{ matrix.platform }}
+          CIBW_ENVIRONMENT: 'PATH="$HOME/.cargo/bin:$PATH"'
+          CIBW_ENVIRONMENT_WINDOWS: 'PATH="$UserProfile\\.cargo\\bin;$PATH"'
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
+          CIBW_BEFORE_BUILD: >
+            pip install -U setuptools-rust &&
+            rustup default nightly &&
+            rustup show
+          CIBW_BEFORE_BUILD_LINUX: >
+            pip install -U setuptools-rust &&
+            curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=nightly --profile=minimal -y &&
+            rustup show
 
-    - name: build windows 32bit binaries
-      if: matrix.os == 'windows'
-      run: cibuildwheel gulagcleaner_python --output-dir dist
-      env:
-        CIBW_BUILD: 'cp3${{ matrix.python-version }}-win32'
-        CIBW_PLATFORM: windows
-        CIBW_ENVIRONMENT: 'PATH="$UserProfile\.cargo\bin;$PATH"'
-        CIBW_BEFORE_BUILD: >
-          pip install -U setuptools-rust &&
-          rustup toolchain install nightly-i686-pc-windows-msvc &&
-          rustup default nightly-i686-pc-windows-msvc &&
-          rustup override set nightly-i686-pc-windows-msvc &&
-          rustup show
+      - name: List dist contents
+        run: |
+          if [ "${{ matrix.os }}" = "windows" ]; then
+            dir dist
+          else
+            ls -lh dist
+          fi
+        shell: bash
 
-    - name: list dist files
-      run: ${{ matrix.ls || 'ls -lh' }} dist/
+      - name: Twine check
+        run: twine check dist/*
 
-    - name: twine check
-      run: twine check dist/*
+      - name: Check if dist folder exists (Windows)
+        if: matrix.os == 'windows'
+        run: |
+          if not exist dist (
+            echo Error: dist folder does not exist!
+            exit 1
+          )
+        shell: cmd
 
-    - name: upload to pypi
-      if: startsWith(github.ref, 'refs/tags/')
-      run: twine upload dist/*
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.pypi_token }}
+      - name: Check if dist folder exists (Non-Windows)
+        if: matrix.os != 'windows'
+        run: |
+          if [ ! -d dist ]; then
+            echo "Error: dist folder does not exist!"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Debug dist contents
+        run: |
+          echo "Listing contents of dist folder:"
+          if [ "${{ matrix.os }}" = "windows" ]; then
+            dir dist
+          else
+            ls -lh dist
+          fi
+        shell: bash
+
+
+      - name: Upload dist as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.os }}-${{ matrix.python-version }}
+          path: dist/
+
+  upload:
+    name: Upload to PyPI
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist/
+
+      - name: Install Python and twine
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - run: pip install -U twine
+
+      - name: Combine all dist folders
+        run: |
+          set -eux
+          mkdir -p combined_dist
+          # Find all wheels and tarballs inside any subdir of dist/
+          find dist/ -type f \( -name '*.whl' -o -name '*.tar.gz' \) -exec cp {} combined_dist/ \;
+          ls -lh combined_dist
+
+      - name: Fail if combined_dist is empty
+        run: |
+          if [ -z "$(ls -A combined_dist)" ]; then
+            echo "No distribution files found in combined_dist!"
+            exit 1
+          fi
+
+      - name: Upload to PyPI
+        run: python3 -m twine upload --verbose combined_dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.pypi_token }}
