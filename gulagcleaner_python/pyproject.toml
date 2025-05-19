@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gulagcleaner"
-version = "4"
+version = "0.16.0"
 description = "Ad removal tool for PDFs."
 authors = [
   {name = "YM162", email = "david.fontaneda@YM162.dev"}]
