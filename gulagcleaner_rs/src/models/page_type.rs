@@ -75,9 +75,13 @@ impl PageType {
         let xobjs = get_xobjs(doc, page)?;
         let images = get_images(doc, xobjs)?;
         let image_set: HashSet<(i64, i64)> = images.into_iter().collect();
+        fn scaled_image_set(images: &HashSet<(i64, i64)>) -> HashSet<(i64, i64)> {
+            images.iter().map(|&(w, h)| (w, h * 2)).collect()
+        }
+        let scaled_images = scaled_image_set(&image_set);
  
-        let has_horizontal_banner = matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &image_set);
-        let has_vertical_banner = matches_with_tolerance(&VERTICAL_BANNER_DIMS, &image_set);
+        let has_horizontal_banner = matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &scaled_images);
+        let has_vertical_banner = matches_with_tolerance(&VERTICAL_BANNER_DIMS, &scaled_images);
         let has_full_page = matches_with_tolerance(&FULL_PAGE_DIMS, &image_set);
  
         if has_horizontal_banner && has_vertical_banner {
