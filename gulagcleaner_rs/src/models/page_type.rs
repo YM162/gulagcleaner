@@ -79,9 +79,11 @@ impl PageType {
             images.iter().map(|&(w, h)| (w, h * 2)).collect()
         }
         let scaled_images = scaled_image_set(&image_set);
- 
-        let has_horizontal_banner = matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &scaled_images);
-        let has_vertical_banner = matches_with_tolerance(&VERTICAL_BANNER_DIMS, &scaled_images);
+        // we compare against scaled AND unscaled sets to ensure backwards compatiblity
+        let has_horizontal_banner = matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &scaled_images) ||
+                                    matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &image_set);
+        let has_vertical_banner = matches_with_tolerance(&VERTICAL_BANNER_DIMS, &scaled_images) ||
+                                  matches_with_tolerance(&VERTICAL_BANNER_DIMS, &image_set);
         let has_full_page = matches_with_tolerance(&FULL_PAGE_DIMS, &image_set);
  
         if has_horizontal_banner && has_vertical_banner {
