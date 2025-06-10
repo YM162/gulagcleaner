@@ -1,0 +1,20 @@
+[package]
+name = "gulagcleaner_rs"
+version = "0.16.2"
+edition = "2021"
+authors = ["YM162 <david.fontaneda@YM162.dev>"]
+description = "Ad removal tool for PDFs."
+readme = "./README.md"
+homepage = "https://github.com/YM162/gulag-cleaner-cli"
+repository = "https://github.com/YM162/gulag-cleaner-cli.git"
+license = "GPL-3.0"
+keywords = ["wuolah", "studocu", "pdf", "stucleaner", "gulagcleaner"]
+exclude=["example_docs/"]
+
+[lib]
+name = "gulagcleaner_rs"
+
+[dependencies]
+flate2 = "1.0.27"
+lopdf = "0.34.0"
+regex = "1.11.0"

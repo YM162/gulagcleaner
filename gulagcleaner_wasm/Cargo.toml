@@ -1,0 +1,21 @@
+[package]
+name = "gulagcleaner_wasm"
+version = "0.16.2"
+edition = "2021"
+authors = ["YM162 <david.fontaneda@YM162.dev>"]
+description = "Ad removal tool for PDFs."
+readme = "../README.md"
+homepage = "https://github.com/YM162/gulag-cleaner-cli"
+repository = "https://github.com/YM162/gulag-cleaner-cli.git"
+license = "GPL-3.0"
+keywords = ["wuolah", "studocu", "pdf", "stucleaner", "gulagcleaner"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde-wasm-bindgen = "0.6.3"
+wasm-bindgen = "=0.2.92"
+
+gulagcleaner_rs = { path = "../gulagcleaner_rs" }

@@ -1,0 +1,42 @@
+name: Build as WASM and publish in npm
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and publish to npm
+    steps:
+      - name: git-checkout
+        uses: actions/checkout@v4
+
+      - name: install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: build wasm
+        run: wasm-pack build gulagcleaner_wasm --target web --release -d WASM_build
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: run install
+        working-directory: ./gulagcleaner_wasm/WASM_build
+        run: npm install
+
+      - name: publish to npm
+        working-directory: ./gulagcleaner_wasm/WASM_build
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

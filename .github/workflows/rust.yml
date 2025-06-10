@@ -1,0 +1,31 @@
+name: Test and Build Rust
+
+on:
+  push:
+  pull_request:
+  # schedule:
+  # Check if it works with current dependencies (weekly on Friday 00:00  UTC)
+  #   - cron: '0 0 * * 5'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          override: true
+          profile: minimal
+          toolchain: stable
+
+      - uses: actions/checkout@v3
+      - name: Run clippy
+        working-directory: ./gulagcleaner_rs
+        run: |
+          cargo clippy --verbose --all-targets --all-features -- -D warnings
+          cargo test --verbose --all-features

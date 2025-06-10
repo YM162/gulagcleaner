@@ -1,0 +1,22 @@
+name: Publish to crates registry
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Publish to crates registry
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: cargo publish -p gulagcleaner_rs --token ${CARGO_REGISTRY_TOKEN}
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
