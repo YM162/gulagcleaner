@@ -15,12 +15,23 @@ jobs:
       - name: Get new version
         id: get_version
         run: |
-          NEW_VERSION=$(grep 'version =' gulagcleaner_rs/Cargo.toml | sed 's/.*version = "$.*$"/\1/')
+          NEW_VERSION=$(grep 'version =' gulagcleaner_rs/Cargo.toml | sed -E 's/.*version = "(.*)"/\1/')
           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+
+      - name: Get old version from other files
+        id: get_old_version
+        run: |
+          OLD_VERSION=$(grep 'version =' gulagcleaner_python/Cargo.toml | sed -E 's/.*version = "(.*)"/\1/' || true)
+          if [ -z "$OLD_VERSION" ]; then
+            OLD_VERSION=$(grep 'version =' gulagcleaner_wasm/Cargo.toml | sed -E 's/.*version = "(.*)"/\1/' || true)
+          fi
+          if [ -z "$OLD_VERSION" ]; then
+            OLD_VERSION=$(grep 'version =' gulagcleaner_python/pyproject.toml | sed -E 's/.*version = "(.*)"/\1/' || true)
+          fi
+          echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_ENV
 
       - name: Update version in other files
         run: |
-          OLD_VERSION=$(grep 'version =' gulagcleaner_rs/Cargo.toml | sed 's/.*version = "$.*$"/\1/')
           echo "Updating version from ${OLD_VERSION} to ${NEW_VERSION} in specified files."
 
           for file in gulagcleaner_python/Cargo.toml gulagcleaner_wasm/Cargo.toml gulagcleaner_python/pyproject.toml; do
