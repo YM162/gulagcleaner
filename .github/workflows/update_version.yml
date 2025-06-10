@@ -1,0 +1,49 @@
+name: Update Version
+
+on:
+  push:
+    paths:
+      - 'gulagcleaner_rs/Cargo.toml'
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get new version
+        id: get_version
+        run: |
+          NEW_VERSION=$(grep 'version =' gulagcleaner_rs/Cargo.toml | sed -E 's/.*version = "(.*)"/\1/')
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+
+      - name: Get old version from other files
+        id: get_old_version
+        run: |
+          OLD_VERSION=$(grep 'version =' gulagcleaner_python/Cargo.toml | sed -E 's/.*version = "(.*)"/\1/' || true)
+          if [ -z "$OLD_VERSION" ]; then
+            OLD_VERSION=$(grep 'version =' gulagcleaner_wasm/Cargo.toml | sed -E 's/.*version = "(.*)"/\1/' || true)
+          fi
+          if [ -z "$OLD_VERSION" ]; then
+            OLD_VERSION=$(grep 'version =' gulagcleaner_python/pyproject.toml | sed -E 's/.*version = "(.*)"/\1/' || true)
+          fi
+          echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_ENV
+
+      - name: Update version in other files
+        run: |
+          echo "Updating version from ${OLD_VERSION} to ${NEW_VERSION} in specified files."
+
+          for file in gulagcleaner_python/Cargo.toml gulagcleaner_wasm/Cargo.toml gulagcleaner_python/pyproject.toml; do
+            if [ -f "$file" ]; then
+              sed -i "s/version = \"$OLD_VERSION\"/version = \"$NEW_VERSION\"/g" "$file"
+            fi
+          done
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add gulagcleaner_python/Cargo.toml gulagcleaner_wasm/Cargo.toml gulagcleaner_python/pyproject.toml
+          git commit -m "Update version to ${NEW_VERSION}" || echo "No changes to commit"
+          git push
