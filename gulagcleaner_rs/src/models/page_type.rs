@@ -68,7 +68,25 @@ fn matches_with_tolerance(dims: &[(i64, i64)], images: &HashSet<(i64, i64)>) -> 
         })
     })
 }
- 
+
+/// Generate combined dimensions where two images share either width or height
+fn generate_combined_dims(images: &HashSet<(i64, i64)>) -> HashSet<(i64, i64)> {
+    let mut combined = HashSet::new();
+    let img_vec: Vec<_> = images.iter().collect();
+    for i in 0..img_vec.len() {
+        for j in (i + 1)..img_vec.len() {
+            let &(w1, h1) = img_vec[i];
+            let &(w2, h2) = img_vec[j];
+            if w1 == w2 {
+                combined.insert((w1, h1 + h2));
+            } else if h1 == h2 {
+                combined.insert((w1 + w2, h1));
+            }
+        }
+    }
+    combined
+}
+
 impl PageType {
     /// Get the type of a page based on its content.
     pub fn get_page_type(doc: &Document, page: &ObjectId) -> Result<PageType, Box<dyn Error>> {
@@ -79,11 +97,17 @@ impl PageType {
             images.iter().map(|&(w, h)| (w, h * 2)).collect()
         }
         let scaled_images = scaled_image_set(&image_set);
-        // we compare against scaled AND unscaled sets to ensure backwards compatiblity
-        let has_horizontal_banner = matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &scaled_images) ||
+        let combined_dims = generate_combined_dims(&image_set);
+
+        // we compare against combined, scaled and unscaled sets to ensure backwards compatiblity
+        let has_horizontal_banner = matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &combined_dims) ||
                                     matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &image_set);
-        let has_vertical_banner = matches_with_tolerance(&VERTICAL_BANNER_DIMS, &scaled_images) ||
+                                    matches_with_tolerance(&HORIZONTAL_BANNER_DIMS, &scaled_images);
+
+        let has_vertical_banner = matches_with_tolerance(&VERTICAL_BANNER_DIMS, &combined_dims) ||
                                   matches_with_tolerance(&VERTICAL_BANNER_DIMS, &image_set);
+                                  matches_with_tolerance(&VERTICAL_BANNER_DIMS, &scaled_images);
+
         let has_full_page = matches_with_tolerance(&FULL_PAGE_DIMS, &image_set);
  
         if has_horizontal_banner && has_vertical_banner {
