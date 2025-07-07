@@ -37,6 +37,10 @@ jobs:
             platform: linux
             python-version: '3.12'
             cibw-build: 'cp312-*'
+          - os: ubuntu
+            platform: linux
+            python-version: '3.13'
+            cibw-build: 'cp313-*'
           - os: macos
             platform: macos
             python-version: '3.9'
@@ -53,6 +57,10 @@ jobs:
             platform: macos
             python-version: '3.12'
             cibw-build: 'cp312-*'
+          - os: macos
+            platform: macos
+            python-version: '3.13'
+            cibw-build: 'cp313-*'
           - os: windows
             platform: windows
             python-version: '3.9'
@@ -69,6 +77,10 @@ jobs:
             platform: windows
             python-version: '3.12'
             cibw-build: 'cp312-*'
+          - os: windows
+            platform: windows
+            python-version: '3.13'
+            cibw-build: 'cp313-*'
 
     runs-on: ${{ matrix.os }}-latest
 
