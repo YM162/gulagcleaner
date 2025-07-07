@@ -16,5 +16,5 @@ crate-type = ["cdylib"]
 path = "rust/lib.rs"
 
 [dependencies]
-pyo3 = { version = "0.20.0", features = ["extension-module"] }
+pyo3 = { version = "0.25.1", features = ["extension-module"] }
 gulagcleaner_rs = { path = "../gulagcleaner_rs" }
