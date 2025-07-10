@@ -60,6 +60,10 @@ return_msg = clean_pdf_path("input.pdf","output.pdf")
 
 If you are willing to use the Rust distribution of Gulag Cleaner, you can find the instructions in the [Rust distribution README.md](gulagcleaner_rs/README.md) file.
 
+## WASM Distribution
+
+If you are willing to use the WASM distribution of Gulag Cleaner, you can find the instructions in the [WASM distribution README.md](gulagcleaner_wasm/README.md) file.
+
 # License
 
 Gulag Cleaner is distributed under the GPL-3 license, which means it's open-source and free to use.
