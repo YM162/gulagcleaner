@@ -5,6 +5,11 @@
 
 To incorporate Rust components within Gulag Cleaner, ensure Rust is correctly installed on your system. Follow the installation guide on the [official Rust website](https://www.rust-lang.org/tools/install) for detailed instructions. This includes installing `rustup`, which is the Rust toolchain manager, and the Rust compiler (`rustc`).
 
+## Using `gulagcleaner_rs` in your Rust code
+
+To use this crate in your code, please refer to the following documentation:
+**https://docs.rs/gulagcleaner_rs/latest/gulagcleaner_rs/**
+
 ## Running Rust Tests
 
 Gulag Cleaner leverages Rust for certain operations, providing performance and safety benefits. To ensure these components work as expected, comprehensive tests are included.
