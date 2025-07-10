@@ -1,4 +1,5 @@
 # Gulag Cleaner Rust Distribution
+![Crates.io Downloads (recent)](https://img.shields.io/crates/dr/gulagcleaner_rs)
 
 ## Setting Up Rust
 
@@ -26,29 +27,4 @@ To run the tests:
 
    This command targets the specific Rust package (`gulagcleaner_rs`) and enables detailed outputs with `--nocapture`.
 
-   Note: at the moment this test only include the reading, cleaning and writing of 2 example PDFs for Wuolah and Studocs.
-
-## Rust Development Guidelines
-
-To contribute to the Rust portion of Gulag Cleaner, please adhere to the following guidelines:
-
-- **Code Clarity**: Write clear, readable code with meaningful variable names and concise functions.
-- **Comments and Documentation**: Add comments explaining complex logic or important decisions. Update the `README.md` with relevant examples and instructions when adding new features or making significant changes.
-- **Performance**: Optimize for efficiency. Rust is known for its performance, so ensure your contributions enhance or maintain the current speed and memory usage.
-- **Testing**: Write tests for new features or bug fixes if possible. Ensure existing tests pass without modifications unless the changes are intended to update the test behavior.
-
-## TODO for Rust
-
-If you're looking to contribute, here are some areas that need attention:
-
-- **Writing Tests**: Our test coverage could be improved. Writing additional unit and integration tests for the Rust code is a priority.
-- **Documentation**: A detailed README.md needs to be added, including setup instructions, examples of usage, and a description of the functions available.
-- **Code Optimization**: There's always room for performance improvements. Profiling and optimizing existing Rust code can significantly impact overall tool performance.
-
-## Contributing
-
-Contributions to the Rust codebase of Gulag Cleaner are highly encouraged. Whether you're fixing bugs, optimizing performance, or adding new features, your input is valued. Follow the project's contribution guidelines and submit pull requests with your changes.
-
-## License
-
-Gulag Cleaner is distributed under the GPL-3 license, which means it's open-source and free to use.
+   Note: at the moment this test only include the reading, cleaning and writing of 2 example PDFs for Wuolah and Studocu.

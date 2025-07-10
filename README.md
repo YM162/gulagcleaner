@@ -73,4 +73,3 @@ We're always looking for ways to improve Gulag Cleaner, and we welcome contribut
 If you want to help, these are the top priorities right now:
 
 - Find a way to sending the method code to JS in the WASM implementation. Serialization using Serde seems to fail for some reason.
-- Add a README.md (With code examples) for the JS (wasm) distribution.
