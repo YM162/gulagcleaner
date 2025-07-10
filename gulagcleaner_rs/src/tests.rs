@@ -29,7 +29,7 @@ fn create_output_directory() {
 /// or an `Err` with a string describing the error.
 fn read_and_clean_pdf(in_path: &str) -> Result<Vec<u8>, String> {
     let data =
-        std::fs::read(in_path).map_err(|e| format!("Failed to read `{}`: {}", in_path, e))?;
+        std::fs::read(in_path).map_err(|e| format!("Failed to read `{in_path}`: {e}"))?;
     let (clean_file, _) = clean_pdf(data, false);
     Ok(clean_file)
 }
@@ -47,7 +47,7 @@ fn read_and_clean_pdf(in_path: &str) -> Result<Vec<u8>, String> {
 /// with a string describing the error.
 fn store_pdf(out_path: &str, clean_file: Vec<u8>) -> Result<(), String> {
     std::fs::write(out_path, clean_file)
-        .map_err(|e| format!("Failed to write `{}`: {}", out_path, e))
+        .map_err(|e| format!("Failed to write `{out_path}`: {e}"))
 }
 
 /// Executes a cleaning test using the provided `TestConfig`.

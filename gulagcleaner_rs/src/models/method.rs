@@ -22,7 +22,7 @@ pub enum Method {
 /// Returns a tuple containing the pages to delete and a status code.
 impl Cleaner for Method {
     fn clean(&mut self, doc: &mut Document) -> (Vec<u32>, u8) {
-        println!("Cleaning with method: {:?}", self);
+        println!("Cleaning with method: {self:?}");
         match self {
             Method::Wuolah(content_list, to_delete) => {
                 let new_contents: Vec<Vec<(u32, u16)>> = content_list
@@ -126,7 +126,7 @@ impl Cleaner for Method {
                 for page in &pages {
                     let page_type =
                         page_type::PageType::get_page_type(doc, page.1).unwrap_or_default();
-                        println!("{:?}", page_type);
+                        println!("{page_type:?}");
                     let mutable_page = doc.get_object_mut(*page.1).unwrap().as_dict_mut().unwrap();
 
                     let mediabox = mutable_page.get(b"MediaBox").unwrap().as_array().unwrap();
@@ -230,7 +230,7 @@ pub fn find_iobj_pairs(first_page: &[(u32, u16)], second_page: &[(u32, u16)]) ->
     let c: Vec<&&(u32, u16)> = unique_first_page
         .intersection(&unique_second_page)
         .collect();
-    println!("{:?}", c);
+    println!("{c:?}");
 
     //It seems like the indexes are always c.len() - 3 and c.len() - 2, except for the len == 2 case.
 
@@ -285,7 +285,7 @@ pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Er
         }
     }
 
-    println!("{:?}", repeated_logo_dims);
+    println!("{repeated_logo_dims:?}");
 
 
     if !has_logo {
