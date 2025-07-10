@@ -31,6 +31,7 @@ jobs:
           echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_ENV
 
       - name: Update version in other files
+        if: env.OLD_VERSION != env.NEW_VERSION
         run: |
           echo "Updating version from ${OLD_VERSION} to ${NEW_VERSION} in specified files."
 
@@ -41,6 +42,7 @@ jobs:
           done
 
       - name: Commit changes
+        if: env.OLD_VERSION != env.NEW_VERSION
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
