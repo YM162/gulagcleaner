@@ -1,4 +1,4 @@
-use crate::models::method::Method;
+use crate::models::method::{find_original_contents, Method};
 
 use lopdf::Document;
 use std::collections::HashSet;
@@ -94,14 +94,21 @@ fn match_method(doc: &Document, force_naive: bool) -> Method {
         .filter(|x| x.len() > 3)
         .collect();
 
-    if long_content_list.len() > 1
+    let shares_content_streams = long_content_list.len() > 1
         && long_content_list[0]
             .iter()
             .collect::<HashSet<_>>()
             .intersection(&long_content_list[1].iter().collect::<HashSet<_>>())
             .collect::<Vec<_>>()
             .len()
-            > 1
+            > 1;
+
+    // Wuolah pages can also be recognised one by one, which covers documents with a single
+    // page with ads and documents whose pages do not share content streams.
+    if shares_content_streams
+        || long_content_list
+            .iter()
+            .any(|contents| find_original_contents(doc, contents).is_some())
     {
         return Method::Wuolah(long_content_list, to_delete);
     }
