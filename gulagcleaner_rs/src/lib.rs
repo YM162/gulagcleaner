@@ -12,12 +12,10 @@
     ```rust
     use gulagcleaner_rs::clean::clean_pdf;
 
-    fn main(){
-        let data = std::fs::read("example_docs/wuolah-free-example.pdf").unwrap();
-        let (clean_pdf, _) = clean_pdf(data, false);
-        //Stores the clean pdf in the out directory
-        std::fs::write("example_docs/out/wuolah_clean.pdf", clean_pdf).unwrap();
-    }
+    let data = std::fs::read("example_docs/wuolah-free-example.pdf").unwrap();
+    let (clean_pdf, _) = clean_pdf(data, false);
+    //Stores the clean pdf in the out directory
+    std::fs::write("example_docs/out/wuolah_clean.pdf", clean_pdf).unwrap();
     ```
 */
 /// Main method execution
