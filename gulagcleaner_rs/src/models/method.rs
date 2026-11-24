@@ -25,27 +25,18 @@ impl Cleaner for Method {
         println!("Cleaning with method: {self:?}");
         match self {
             Method::Wuolah(content_list, to_delete) => {
-                let new_contents: Vec<Vec<(u32, u16)>> = content_list
+                // Content streams that draw the original page, for every page. Each page is
+                // analysed on its own first, so this works whatever its orientation and even
+                // if the document only has one page with ads. Comparing it with its neighbours
+                // is kept as a fallback. `None` means an unknown structure: the page is left
+                // untouched.
+                let new_contents: Vec<Option<Vec<(u32, u16)>>> = content_list
                     .iter()
                     .enumerate()
                     .map(|(i, x)| {
-                        let pares = if x == content_list.last().unwrap() {
-                            find_iobj_pairs(x, &content_list[i - 1])
-                        } else {
-                            let check_if_00 = find_iobj_pairs(x, &content_list[i + 1]);
-                            if check_if_00 == (0, 0) {
-                                let check_again_if_00 = find_iobj_pairs(x, &content_list[i - 1]);
-                                if check_again_if_00 == (0, 0) {
-                                    (0, 0)
-                                } else {
-                                    check_again_if_00
-                                }
-                            } else {
-                                check_if_00
-                            }
-                        };
-
-                        x[(pares.0) - 2..=(pares.1) + 3].to_vec()
+                        find_original_contents(doc, x)
+                            .or_else(|| find_shared_contents(content_list, i))
+                            .map(|(first, last)| x[first..=last].to_vec())
                     })
                     .collect();
 
@@ -56,8 +47,11 @@ impl Cleaner for Method {
                     .filter(|x| doc.get_page_contents(*x.1).len() > 3)
                     .collect();
                 for (i, page) in vector.iter().enumerate() {
+                    let Some(page_contents) = &new_contents[i] else {
+                        continue;
+                    };
                     let mutable_page = doc.get_object_mut(*page.1).unwrap().as_dict_mut().unwrap();
-                    let contents_objects: Vec<Object> = new_contents[i]
+                    let contents_objects: Vec<Object> = page_contents
                         .iter()
                         .map(|x| Object::Reference(*x))
                         .collect();
@@ -250,6 +244,215 @@ pub fn find_iobj_pairs(first_page: &[(u32, u16)], second_page: &[(u32, u16)]) ->
     }
 
     (indexes[len - 3], indexes[len - 2])
+}
+
+/// Locates the original contents of page `i` by looking at the content streams it shares
+/// with the next or the previous page (the method used before [`find_original_contents`]).
+///
+/// Returns the inclusive range of indexes into `content_list[i]`, or `None` if no
+/// neighbouring page shares content streams with it.
+fn find_shared_contents(content_list: &[Vec<(u32, u16)>], i: usize) -> Option<(usize, usize)> {
+    let page = &content_list[i];
+    let (first, last) = [Some(i + 1), i.checked_sub(1)]
+        .into_iter()
+        .flatten()
+        .filter_map(|j| content_list.get(j))
+        .map(|other| find_iobj_pairs(page, other))
+        .find(|&pairs| pairs != (0, 0))?;
+
+    let first = first.checked_sub(2)?;
+    let last = last + 3;
+    (last < page.len()).then_some((first, last))
+}
+
+/// `q [cm]` streams at the start of a Wuolah page that belong to the original page (the plain
+/// `q` plus the scale and translation that fit it to the page size) and therefore must be kept.
+const ORIGINAL_PAGE_WRAPPERS: usize = 3;
+
+/// Finds the content streams that draw the original page in a page made by Wuolah.
+///
+/// Wuolah builds its pages with pdf-lib: it wraps the original contents in `q <matrix> cm`
+/// streams that shrink and move them to make room for the ads, and then appends the ads
+/// (banners, logo, footer, hidden text) as more content streams:
+///
+/// ```text
+/// q a b c d e f cm   ┐ ad layout (removed)
+/// ...                ┘
+/// q a b c d e f cm   ┐
+/// q a b c d e f cm   │ original page (kept)
+/// q                  │
+/// <original page>    │
+/// Q                  │
+/// Q                  │
+/// Q                  ┘
+/// <ads>              ┐ (removed)
+/// Q ...              ┘
+/// ```
+///
+/// The original page is found by following the graphics state nesting (`q`/`Q`) of the page
+/// itself, so it does not depend on the page orientation, on the size of the ads, nor on
+/// comparing the page with other pages.
+///
+/// Returns the inclusive range of indexes into `contents`, or `None` if the page does not
+/// have this structure.
+pub fn find_original_contents(doc: &Document, contents: &[ObjectId]) -> Option<(usize, usize)> {
+    let stream_data = |id: &ObjectId| {
+        doc.get_object(*id)
+            .and_then(Object::as_stream)
+            .and_then(|stream| stream.get_plain_content())
+            .unwrap_or_default()
+    };
+    let mut streams = contents.iter().map(stream_data).enumerate().peekable();
+
+    let mut wrappers: usize = 0;
+    while streams
+        .next_if(|(_, data)| is_wrapper_stream(data))
+        .is_some()
+    {
+        wrappers += 1;
+    }
+    let first = wrappers.checked_sub(ORIGINAL_PAGE_WRAPPERS)?;
+
+    // Follow the nesting until the outermost wrapper of the original page is closed.
+    let mut depth = ORIGINAL_PAGE_WRAPPERS as i64;
+    for (i, data) in streams {
+        let (net, lowest) = graphics_state_balance(&data);
+        if depth + lowest > 0 {
+            depth += net;
+            continue;
+        }
+        // It must be closed by one of the `Q` streams written by pdf-lib, and there must be
+        // something left to remove: otherwise this is not a Wuolah page.
+        let removes_something = first > 0 || i + 1 < contents.len();
+        return (depth == 1 && is_pop_stream(&data) && removes_something).then_some((first, i));
+    }
+    None
+}
+
+/// Whether a content stream only saves the graphics state and, optionally, applies a
+/// transformation matrix (`q` or `q a b c d e f cm`), like the ones written by pdf-lib.
+fn is_wrapper_stream(content: &[u8]) -> bool {
+    let tokens: Vec<&[u8]> = tokens(content).take(9).collect();
+    match tokens.as_slice() {
+        [b"q"] => true,
+        [b"q", matrix @ .., b"cm"] => matrix.len() == 6 && matrix.iter().all(|t| is_number(t)),
+        _ => false,
+    }
+}
+
+/// Whether a content stream only restores the graphics state (`Q`).
+fn is_pop_stream(content: &[u8]) -> bool {
+    let mut tokens = tokens(content);
+    tokens.next() == Some(&b"Q"[..]) && tokens.next().is_none()
+}
+
+fn tokens(content: &[u8]) -> impl Iterator<Item = &[u8]> + '_ {
+    content
+        .split(|&c| is_pdf_whitespace(c))
+        .filter(|token| !token.is_empty())
+}
+
+fn is_number(token: &[u8]) -> bool {
+    token.iter().any(u8::is_ascii_digit)
+        && token
+            .iter()
+            .all(|c| c.is_ascii_digit() || matches!(c, b'+' | b'-' | b'.'))
+}
+
+/// Effect of a content stream on the graphics state stack, as `(net, lowest)`: `net` is the
+/// number of `q` minus the number of `Q` operators, and `lowest` the lowest depth reached,
+/// relative to the start of the stream (so it is never positive).
+///
+/// Strings, hex strings, comments, names and inline image data are skipped, so that their
+/// contents are not mistaken for operators.
+pub(crate) fn graphics_state_balance(content: &[u8]) -> (i64, i64) {
+    let (mut depth, mut lowest) = (0_i64, 0_i64);
+    let mut i = 0;
+    while i < content.len() {
+        i = match content[i] {
+            c if is_pdf_whitespace(c) => i + 1,
+            b'%' => content[i..]
+                .iter()
+                .position(|&c| c == b'\n' || c == b'\r')
+                .map_or(content.len(), |end| i + end),
+            b'(' => skip_literal_string(content, i),
+            b'<' if content.get(i + 1) == Some(&b'<') => i + 2,
+            b'<' => content[i..]
+                .iter()
+                .position(|&c| c == b'>')
+                .map_or(content.len(), |end| i + end + 1),
+            b'/' => end_of_token(content, i + 1),
+            c if is_pdf_delimiter(c) => i + 1,
+            _ => {
+                let end = end_of_token(content, i);
+                match &content[i..end] {
+                    b"q" => depth += 1,
+                    b"Q" => {
+                        depth -= 1;
+                        lowest = lowest.min(depth);
+                    }
+                    _ => {}
+                }
+                if &content[i..end] == b"ID" {
+                    skip_inline_image_data(content, end)
+                } else {
+                    end
+                }
+            }
+        };
+    }
+    (depth, lowest)
+}
+
+fn is_pdf_whitespace(c: u8) -> bool {
+    matches!(c, b'\0' | b'\t' | b'\n' | b'\x0C' | b'\r' | b' ')
+}
+
+fn is_pdf_delimiter(c: u8) -> bool {
+    matches!(
+        c,
+        b'(' | b')' | b'<' | b'>' | b'[' | b']' | b'{' | b'}' | b'/' | b'%'
+    )
+}
+
+fn end_of_token(content: &[u8], start: usize) -> usize {
+    content[start..]
+        .iter()
+        .position(|&c| is_pdf_whitespace(c) || is_pdf_delimiter(c))
+        .map_or(content.len(), |end| start + end)
+}
+
+/// Skips a literal string, which can contain balanced and escaped parentheses.
+fn skip_literal_string(content: &[u8], start: usize) -> usize {
+    let mut nesting = 0;
+    let mut i = start;
+    while i < content.len() {
+        match content[i] {
+            b'\\' => i += 1,
+            b'(' => nesting += 1,
+            b')' => {
+                nesting -= 1;
+                if nesting == 0 {
+                    return i + 1;
+                }
+            }
+            _ => {}
+        }
+        i += 1;
+    }
+    content.len()
+}
+
+/// Skips the binary data of an inline image, from the end of the `ID` operator to `EI`.
+fn skip_inline_image_data(content: &[u8], start: usize) -> usize {
+    (start + 1..content.len().saturating_sub(1))
+        .find(|&i| {
+            content[i] == b'E'
+                && content[i + 1] == b'I'
+                && is_pdf_whitespace(content[i - 1])
+                && content.get(i + 2).is_none_or(|&c| is_pdf_whitespace(c))
+        })
+        .map_or(content.len(), |i| i + 2)
 }
 
 pub fn remove_logo(doc: &mut Document, page: &ObjectId) -> Result<(), Box<dyn Error>> {
